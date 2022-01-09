@@ -1,16 +1,12 @@
 Success {
     result: JssScheme {
         type: Object,
+        definition: {},
         keywords: {
-            "$id": String(
-                "https://example.com/schemas/customer",
-            ),
-            "$schema": String(
-                "https://json-schema.org/draft/2020-12/schema",
-            ),
+            "$id": "https://example.com/schemas/customer",
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
         },
         annotations: {},
-        definitions: {},
         properties: {
             "billing_address": JssProperty {
                 type: Reference(
@@ -18,18 +14,16 @@ Success {
                 ),
                 keywords: {},
                 annotations: {},
-                definitions: {},
                 properties: {},
             },
             "first_name": JssProperty {
-                type: String,
+                type: string,
                 keywords: {},
                 annotations: {},
-                definitions: {},
                 properties: {},
             },
             "last_name": JssProperty {
-                type: String,
+                type: string,
                 keywords: {},
                 annotations: {
                     "maxLength": Number(
@@ -39,18 +33,14 @@ Success {
                         2,
                     ),
                 },
-                definitions: {},
                 properties: {},
             },
             "shipping_address": JssProperty {
-                type: String,
-                keywords: {},
-                annotations: {
-                    "pattern": String(
-                        "^(\\([0-9]{3}\\))?[0-9]{3}-[0-9]{4}$",
-                    ),
+                type: string {
+                    pattern: "^(\\([0-9]{3}\\))?[0-9]{3}-[0-9]{4}$",
                 },
-                definitions: {},
+                keywords: {},
+                annotations: {},
                 properties: {},
             },
         },

@@ -50,13 +50,24 @@ impl JssSchema {
         jss.consume_rest(value, errors);
         Ok(jss)
     }
-    #[inline]
     fn parse_steps(&mut self, value: &mut Value, errors: &mut Vec<JssError>) {
         self.parse_type(value, errors);
         self.extend_properties("properties", value, errors);
         self.extend_definition("$defs", value, errors);
         self.extend_definition("definitions", value, errors);
-        self.parse_pattern("definitions", value, errors);
+        match self.typing {
+            JssType::Undefined => {}
+            JssType::Anything => {}
+            JssType::Nothing => {}
+            JssType::String => {
+                let mut kind = JssSchemaString::default();
+                kind.parse_pattern("pattern", value, errors);
+                self.kind = kind.into();
+            }
+            JssType::Number => {}
+            JssType::Object => {}
+            JssType::Reference(_) => {}
+        }
     }
     fn consume_rest(&mut self, value: Value, _: &mut Vec<JssError>) {
         let object = match value.into_object() {
@@ -65,10 +76,10 @@ impl JssSchema {
         };
         for (k, v) in object {
             if k.starts_with("$") {
-                self.keywords.insert(k, v)
+                self.keywords.insert(k, v.into())
             }
             else {
-                self.annotation.insert(k, v)
+                self.annotation.insert(k, v.into())
             };
         }
     }
@@ -100,9 +111,24 @@ impl JssSchema {
             }
         }
     }
+}
+
+impl Default for JssSchemaString {
+    fn default() -> Self {
+        Self { pattern: "".to_string() }
+    }
+}
+
+impl From<JssSchemaString> for JssKind {
+    fn from(v: JssSchemaString) -> Self {
+        Self::PropertyString(Box::new(v))
+    }
+}
+
+impl JssSchemaString {
     pub fn parse_pattern(&mut self, key: &str, value: &mut Value, _: &mut Vec<JssError>) {
         if let Some(s) = value.extract_key_as_string(key) {
-            unimplemented!("{}", s)
+            self.pattern = s
         }
     }
 }
