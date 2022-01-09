@@ -1,6 +1,7 @@
 #![doc = include_str!("../Readme.md")]
 
-mod for_serde_json;
-mod json_value;
+mod json;
+mod methods;
 
-pub use json_value::JsonValue;
+pub use methods::JsonValue;
+pub use serde_json::Map;

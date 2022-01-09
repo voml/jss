@@ -2,77 +2,68 @@ use crate::validation::Validation;
 use json_value::JsonValue;
 use jsonschema::JSONSchema;
 use jss_error::{JssError, Result};
-use serde_json::Value;
+use serde_json::{Map, Value};
 
-#[derive(Debug)]
-pub enum JssType {
-    Undefined,
-    Anything,
-    Nothing,
-    String,
-    Number,
-    Object,
-}
+pub(crate) mod types;
 
-impl Default for JssType {
-    fn default() -> Self {
-        Self::Undefined
-    }
-}
-
-impl JssType {
-    fn parse_value(value: &Value) -> Result<Self> {
-        match value {
-            Value::Null => {
-                unimplemented!()
-            }
-            Value::Bool(_) => {
-                unimplemented!()
-            }
-            Value::Number(_) => {
-                unimplemented!()
-            }
-            Value::String(s) => Self::parse_string(s),
-            Value::Array(_) => {
-                unimplemented!()
-            }
-            Value::Object(_) => {
-                unimplemented!()
-            }
-        }
-    }
-    fn parse_string(value: &str) -> Result<Self> {
-        let out = match value {
-            "string" => Self::String,
-            "object" => Self::Object,
-            _ => unimplemented!("{}", value),
-        };
-        Ok(out)
-    }
-}
+pub use self::types::JssType;
 
 #[derive(Debug)]
 pub struct JssSchema {
-    ty: JssType,
+    annotation: JssAnnotation,
+    properties: Vec<JssProperty>,
+}
+
+#[derive(Debug)]
+pub struct JssProperty {
+    annotation: JssAnnotation,
+}
+#[derive(Debug)]
+pub struct JssAnnotation {
+    typing: JssType,
+}
+
+impl JssAnnotation {
+    pub fn parse_type(&mut self, value: Value, errors: &mut Vec<JssError>) {
+        match JssType::parse_value(&value) {
+            Ok(t) => self.typing = t,
+            Err(e) => errors.push(e),
+        }
+    }
+}
+
+impl Default for JssAnnotation {
+    fn default() -> Self {
+        Self { typing: Default::default() }
+    }
 }
 
 impl Default for JssSchema {
     fn default() -> Self {
-        Self { ty: Default::default() }
+        Self { annotation: Default::default(), properties: vec![] }
     }
 }
 
 impl JssSchema {
+    #[inline]
     pub fn anything() -> Self {
-        Self { ty: JssType::Anything }
+        Self { annotation: JssAnnotation { typing: JssType::Anything }, ..Default::default() }
     }
+    #[inline]
     pub fn nothing() -> Self {
-        Self { ty: JssType::Nothing }
+        Self { annotation: JssAnnotation { typing: JssType::Nothing }, ..Default::default() }
     }
 }
 
 impl JssSchema {
-    pub fn parse_json_schema(top: &Value) -> Validation<Self, JssError> {
+    pub fn insert_properties(&mut self, value: Map<String, Value>, errors: &mut Vec<JssError>) {}
+
+    pub fn insert_definition(&mut self, value: Map<String, Value>, errors: &mut Vec<JssError>) {}
+}
+
+impl JssSchema {
+    pub fn parse_json_schema(top: Value) -> Validation<Self, JssError> {
+        let mut top = top;
         let mut errors = vec![];
         // https://json-schema.org/understanding-json-schema/basics.html#id1
         // Accepts anything, as long as it’s valid JSON
@@ -90,25 +81,21 @@ impl JssSchema {
 
         let mut jss = JssSchema::default();
 
-        if let Some(v) = top.get_key("type") {
-            match JssType::parse_value(v) {
-                Ok(t) => jss.ty = t,
-                Err(e) => errors.push(e),
-            }
+        if let Some(s) = top.extract_key("type") {
+            jss.annotation.parse_type(s, &mut errors)
         }
-        if let Some(v) = top.get_key("properties") {
-            match JssType::parse_value(v) {
-                Ok(t) => jss.ty = t,
-                Err(e) => errors.push(e),
-            }
+        if let Some(s) = top.extract_key_as_object("properties") {
+            jss.insert_properties(s, &mut errors)
         }
-
-        todo!()
+        if let Some(s) = top.extract_key_as_object("$defs") {
+            jss.insert_definition(s, &mut errors)
+        }
+        Validation::success(jss, errors)
     }
 }
 
 #[test]
 fn test() {
     let top = include_str!("ref.json").parse::<Value>().unwrap();
-    println!("{:#?}", JssSchema::parse_json_schema(&top))
+    println!("{:#?}", JssSchema::parse_json_schema(top))
 }
