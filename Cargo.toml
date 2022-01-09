@@ -1,0 +1,18 @@
+[workspace]
+
+members = ["projects/*"]
+default-members = [
+    "projects/jss-cli",
+    "projects/jss-core",
+    "projects/jss-error",
+    "projects/jss-converter",
+    "projects/jss-generator",
+]
+
+[profile.release]
+lto = true
+opt-level = "s"
+
+[workspace.metadata.release]
+push = false
+tag = false
