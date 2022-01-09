@@ -1,13 +1,15 @@
-use lipsum_cn::废话生成器;
+use jss_convert::JssObject;
+use serde_json::Value;
+
+mod from_json;
 
 #[test]
 fn ready() {
     println!("it works!")
 }
 
-#[test]
-fn test() {
-    let mut r = 废话生成器::default();
-    let out = r.生成文章("废话", 6000);
-    println!("{}", out);
+fn convert_from_json_schema(source: &str, target: &str) {
+    let top = source.parse::<Value>().unwrap();
+    let jss = JssObject::parse_json_schema(top);
+    assert_eq!(format!("{:#?}", jss), target)
 }

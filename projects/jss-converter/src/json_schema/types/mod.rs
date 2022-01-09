@@ -1,16 +1,5 @@
 use super::*;
 
-#[derive(Debug)]
-pub enum JssType {
-    Undefined,
-    Anything,
-    Nothing,
-    String,
-    Number,
-    Object,
-    Reference(String),
-}
-
 impl Default for JssType {
     fn default() -> Self {
         Self::Undefined
