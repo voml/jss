@@ -1,20 +1,7 @@
-use crate::JsonValue;
+use crate::{JsonMaybeObject, JsonValueCheck, JsonValueWrap};
 use serde_json::{Map, Value};
 
-impl JsonValue for Value {
-    fn get_key(&self, key: &str) -> Option<&Self> {
-        match self {
-            Self::Object(s) => s.get(key),
-            _ => None,
-        }
-    }
-    fn extract_key(&mut self, key: &str) -> Option<Value> {
-        match self {
-            Self::Object(s) => s.remove(key),
-            _ => None,
-        }
-    }
-
+impl JsonValueWrap for Value {
     fn as_boolean(&self) -> Option<&bool> {
         match self {
             Self::Bool(s) => Some(s),
@@ -29,13 +16,6 @@ impl JsonValue for Value {
         }
     }
 
-    fn as_object(&self) -> Option<&Map<String, Value>> {
-        match self {
-            Self::Object(s) => Some(s),
-            _ => None,
-        }
-    }
-
     fn as_string(&self) -> Option<&String> {
         match self {
             Self::String(s) => Some(s),
@@ -43,8 +23,38 @@ impl JsonValue for Value {
         }
     }
 
+    fn as_object(&self) -> Option<&Map<String, Value>> {
+        match self {
+            Self::Object(s) => Some(s),
+            _ => None,
+        }
+    }
+
+    fn into_string(self) -> Option<String> {
+        match self {
+            Self::String(s) => Some(s),
+            _ => None,
+        }
+    }
+
+    fn into_array(self) -> Option<Vec<Self>> {
+        match self {
+            Self::Array(s) => Some(s),
+            _ => None,
+        }
+    }
+
+    fn into_object(self) -> Option<Map<String, Self>> {
+        match self {
+            Self::Object(o) => Some(o),
+            _ => None,
+        }
+    }
+}
+
+impl JsonValueCheck for Value {
     fn is_null(&self) -> bool {
-        matches!(self, Null)
+        matches!(self, Self::Null)
     }
 
     fn is_empty(&self) -> bool {
@@ -54,10 +64,18 @@ impl JsonValue for Value {
             _ => false,
         }
     }
+}
 
-    fn into_object(self) -> Option<Map<String, Self>> {
+impl JsonMaybeObject for Value {
+    fn get_key(&self, key: &str) -> Option<&Self> {
         match self {
-            Self::Object(o) => Some(o),
+            Self::Object(s) => s.get(key),
+            _ => None,
+        }
+    }
+    fn extract_key(&mut self, key: &str) -> Option<Value> {
+        match self {
+            Self::Object(s) => s.remove(key),
             _ => None,
         }
     }

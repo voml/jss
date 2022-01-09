@@ -1,6 +1,6 @@
 [package]
 name = "json-value"
-version = "0.1.0"
+version = "0.3.0"
 authors = ["Aster <192607617@qq.com>"]
 description = "Helper method to get the josn value"
 repository = "https://github.com/notedge/panduck/tree/master/projects/lipsum-cn"

@@ -3,5 +3,7 @@
 mod json;
 mod methods;
 
-pub use methods::JsonValue;
-pub use serde_json::Map;
+pub use methods::*;
+pub use serde_json::{Map, Value as Json};
+
+pub type JsonObject = Map<String, Json>;

@@ -10,8 +10,8 @@ license = "MPL-2.0"
 edition = "2021"
 
 [dependencies]
-jsonschema = "*"
+jsonschema = "0.13.3"
 serde_json = "1.0.74"
-json-value = {version = "0.1", path = "../json-value"}
+json-value = {version = "0.3", path = "../json-value"}
 jss-error = {version = "1.0", path = "../jss-error"}
-
+indexmap = "1.8.0"
