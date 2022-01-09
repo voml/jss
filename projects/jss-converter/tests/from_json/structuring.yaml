@@ -13,17 +13,13 @@ Success {
             },
             "first_name": JssSchema {
                 kind: Property,
-                typing: Reference(
-                    "#/$defs/name",
-                ),
+                typing: String,
                 properties: {},
                 definition: {},
             },
             "last_name": JssSchema {
                 kind: Property,
-                typing: Reference(
-                    "#/$defs/name",
-                ),
+                typing: String,
                 properties: {},
                 definition: {},
             },
@@ -37,9 +33,9 @@ Success {
             },
         },
         definition: {
-            "name": JssSchema {
+            "address": JssSchema {
                 kind: Property,
-                typing: String,
+                typing: Object,
                 properties: {},
                 definition: {},
             },
