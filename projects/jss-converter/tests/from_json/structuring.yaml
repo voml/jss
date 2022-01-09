@@ -1,43 +1,55 @@
 Success {
-    result: JssSchema {
-        kind: Scheme,
-        typing: Object,
-        properties: {
-            "billing_address": JssSchema {
-                kind: Property,
-                typing: Reference(
-                    "/schemas/address",
-                ),
-                properties: {},
-                definition: {},
-            },
-            "first_name": JssSchema {
-                kind: Property,
-                typing: String,
-                properties: {},
-                definition: {},
-            },
-            "last_name": JssSchema {
-                kind: Property,
-                typing: String,
-                properties: {},
-                definition: {},
-            },
-            "shipping_address": JssSchema {
-                kind: Property,
-                typing: Reference(
-                    "/schemas/address",
-                ),
-                properties: {},
-                definition: {},
+    result: JssScheme {
+        type: Object,
+        definitions: {
+            "address": JssProperty {
+                type: Object,
+                definitions: {},
+                properties: {
+                    "city": JssProperty {
+                        type: String,
+                        definitions: {},
+                        properties: {},
+                    },
+                    "state": JssProperty {
+                        type: Reference(
+                            "#/definitions/state",
+                        ),
+                        definitions: {},
+                        properties: {},
+                    },
+                    "street_address": JssProperty {
+                        type: String,
+                        definitions: {},
+                        properties: {},
+                    },
+                },
             },
         },
-        definition: {
-            "address": JssSchema {
-                kind: Property,
-                typing: Object,
+        properties: {
+            "billing_address": JssProperty {
+                type: Reference(
+                    "/schemas/address",
+                ),
+                definitions: {},
                 properties: {},
-                definition: {},
+            },
+            "first_name": JssProperty {
+                type: String,
+                definitions: {},
+                properties: {},
+            },
+            "last_name": JssProperty {
+                type: String,
+                definitions: {},
+                properties: {},
+            },
+            "shipping_address": JssProperty {
+                type: Reference(
+                    "/schemas/address",
+                ),
+                definitions: {},
+                properties: {},
             },
         },
     },

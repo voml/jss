@@ -1,13 +1,7 @@
 Success {
     result: JssScheme {
         type: Object,
-        definitions: {
-            "name": JssProperty {
-                type: String,
-                definitions: {},
-                properties: {},
-            },
-        },
+        definitions: {},
         properties: {
             "billing_address": JssProperty {
                 type: Reference(
@@ -17,23 +11,17 @@ Success {
                 properties: {},
             },
             "first_name": JssProperty {
-                type: Reference(
-                    "#/$defs/name",
-                ),
+                type: String,
                 definitions: {},
                 properties: {},
             },
             "last_name": JssProperty {
-                type: Reference(
-                    "#/$defs/name",
-                ),
+                type: String,
                 definitions: {},
                 properties: {},
             },
             "shipping_address": JssProperty {
-                type: Reference(
-                    "/schemas/address",
-                ),
+                type: String,
                 definitions: {},
                 properties: {},
             },

@@ -35,9 +35,7 @@ impl JssSchema {
 
         let mut jss = JssSchema::top();
 
-        jss.parse_type(&mut top, &mut errors);
-        jss.extend_properties(&mut top, &mut errors);
-        jss.extend_definition(&mut top, &mut errors);
+        jss.parse_steps(&mut top, &mut errors);
 
         Validation::success(jss, errors)
     }
@@ -47,16 +45,20 @@ impl JssSchema {
     pub fn parse_value(value: Value, errors: &mut Vec<JssError>) -> Result<Self> {
         let mut value = value;
         let mut jss = Self::default();
-        jss.parse_type(&mut value, errors);
-        jss.extend_properties(&mut value, errors);
-        jss.extend_definition(&mut value, errors);
+        jss.parse_steps(&mut value, errors);
         Ok(jss)
+    }
+    #[inline]
+    fn parse_steps(&mut self, value: &mut Value, errors: &mut Vec<JssError>) {
+        self.parse_type(value, errors);
+        self.extend_properties("properties", value, errors);
+        self.extend_definition("$defs", value, errors);
     }
 }
 
 impl JssSchema {
-    pub fn extend_properties(&mut self, value: &mut Value, errors: &mut Vec<JssError>) {
-        if let Some(object) = value.extract_key_as_object("properties") {
+    pub fn extend_properties(&mut self, key: &str, value: &mut Value, errors: &mut Vec<JssError>) {
+        if let Some(object) = value.extract_key_as_object(key) {
             for (key, value) in object {
                 match JssSchema::parse_value(value, errors) {
                     Ok(o) => {
@@ -68,8 +70,8 @@ impl JssSchema {
         }
     }
 
-    pub fn extend_definition(&mut self, value: &mut Value, errors: &mut Vec<JssError>) {
-        if let Some(object) = value.extract_key_as_object("$defs") {
+    pub fn extend_definition(&mut self, key: &str, value: &mut Value, errors: &mut Vec<JssError>) {
+        if let Some(object) = value.extract_key_as_object(key) {
             for (key, value) in object {
                 match JssSchema::parse_value(value, errors) {
                     Ok(o) => {
@@ -78,6 +80,11 @@ impl JssSchema {
                     Err(e) => errors.push(e),
                 }
             }
+        }
+    }
+    pub fn parse_pattern(&mut self, key: &str, value: &mut Value, errors: &mut Vec<JssError>) {
+        if let Some(s) = value.extract_key_as_string(key) {
+            unimplemented!("{}", s)
         }
     }
 }
