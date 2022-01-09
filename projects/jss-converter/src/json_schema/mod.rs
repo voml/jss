@@ -20,6 +20,8 @@ pub struct JssSchema {
     typing: JssType,
     properties: IndexMap<String, JssSchema>,
     definition: IndexMap<String, JssSchema>,
+    annotation: IndexMap<String, Value>,
+    keywords: IndexMap<String, Value>,
 }
 
 #[derive(Debug)]

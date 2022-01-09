@@ -8,6 +8,8 @@ impl Debug for JssSchema {
             JssKind::Property => f.debug_struct("JssProperty"),
         };
         w.field("type", &self.typing);
+        w.field("keywords", &self.keywords);
+        w.field("annotations", &self.annotation);
         w.field("definitions", &self.definition);
         w.field("properties", &self.properties);
         w.finish()

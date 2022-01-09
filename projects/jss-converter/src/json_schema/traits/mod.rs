@@ -19,6 +19,8 @@ impl Default for JssSchema {
             typing: Default::default(),
             properties: Default::default(),
             definition: Default::default(),
+            annotation: Default::default(),
+            keywords: Default::default(),
         }
     }
 }

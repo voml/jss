@@ -1,9 +1,32 @@
 Success {
     result: JssScheme {
         type: Object,
+        keywords: {
+            "$id": String(
+                "https://example.com/schemas/customer",
+            ),
+        },
+        annotations: {
+            "required": Array([
+                String(
+                    "first_name",
+                ),
+                String(
+                    "last_name",
+                ),
+                String(
+                    "shipping_address",
+                ),
+                String(
+                    "billing_address",
+                ),
+            ]),
+        },
         definitions: {
             "name": JssProperty {
                 type: String,
+                keywords: {},
+                annotations: {},
                 definitions: {},
                 properties: {},
             },
@@ -13,6 +36,8 @@ Success {
                 type: Reference(
                     "/schemas/address",
                 ),
+                keywords: {},
+                annotations: {},
                 definitions: {},
                 properties: {},
             },
@@ -20,6 +45,8 @@ Success {
                 type: Reference(
                     "#/$defs/name",
                 ),
+                keywords: {},
+                annotations: {},
                 definitions: {},
                 properties: {},
             },
@@ -27,6 +54,8 @@ Success {
                 type: Reference(
                     "#/$defs/name",
                 ),
+                keywords: {},
+                annotations: {},
                 definitions: {},
                 properties: {},
             },
@@ -34,6 +63,8 @@ Success {
                 type: Reference(
                     "/schemas/address",
                 ),
+                keywords: {},
+                annotations: {},
                 definitions: {},
                 properties: {},
             },

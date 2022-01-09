@@ -1,27 +1,55 @@
 Success {
     result: JssScheme {
         type: Object,
+        keywords: {
+            "$id": String(
+                "https://example.com/schemas/customer",
+            ),
+            "$schema": String(
+                "https://json-schema.org/draft/2020-12/schema",
+            ),
+        },
+        annotations: {},
         definitions: {},
         properties: {
             "billing_address": JssProperty {
                 type: Reference(
                     "/schemas/address",
                 ),
+                keywords: {},
+                annotations: {},
                 definitions: {},
                 properties: {},
             },
             "first_name": JssProperty {
                 type: String,
+                keywords: {},
+                annotations: {},
                 definitions: {},
                 properties: {},
             },
             "last_name": JssProperty {
                 type: String,
+                keywords: {},
+                annotations: {
+                    "maxLength": Number(
+                        3,
+                    ),
+                    "minLength": Number(
+                        2,
+                    ),
+                },
                 definitions: {},
                 properties: {},
             },
             "shipping_address": JssProperty {
                 type: String,
+                keywords: {},
+                annotations: {
+                    "pattern": String(
+                        "^(\\([0-9]{3}\\))?[0-9]{3}-[0-9]{4}$",
+                    ),
+                },
                 definitions: {},
                 properties: {},
             },
