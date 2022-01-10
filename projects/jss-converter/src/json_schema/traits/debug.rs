@@ -6,7 +6,8 @@ impl Debug for JssSchema {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let w = &mut match self.kind {
             JssKind::Scheme => f.debug_struct("JssScheme"),
-            JssKind::Property => f.debug_struct("JssProperty"),
+            JssKind::Property| JssKind::PropertyTop => f.debug_struct("JssProperty"),
+            JssKind::Definition => f.debug_struct("JssDefinition"),
         };
         w.field("type", &self.typing);
         if let JssKind::Scheme = &self.kind {
