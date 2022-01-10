@@ -11,31 +11,34 @@ impl Display for JssSchema {
             JssKind::Scheme => { f.write_str("schema ") }
             JssKind::Property => {f.write_str("property ")}
             JssKind::PropertyTop => {f.write_str(".")}
-            JssKind::Definition => {f.write_str("define ")}
+            JssKind::Definition => {f.write_str("def ")}
         }?;
 
         self.head(f)?;
         for (key, value) in &self.keywords {
-            writeln!(f, "{}", indent(format!("{}: {:#?}", key, value), 4))?
+            writeln!(f, "{}", indent(format!("{}: {:#?}", key, value), 4))?;
         }
         for (key, value) in &self.annotation {
-            writeln!(f, "{}", indent(format!("{}: {:#?}", key, value), 4))?
+            writeln!(f, "{}", indent(format!("{}: {:#?}", key, value), 4))?;
         }
         match self.kind {
             JssKind::Scheme => {}
             _ => {
                 for (_, value) in &self.properties {
-                    writeln!(f, "{}", indent(format!("{:#?}", value), 4))?
+                    writeln!(f, "{}", indent(format!("{:#}", value), 4))?;
+                    writeln!(f)?;
                 }
             }
         }
         f.write_str("}\n")?;
         if let JssKind::Scheme = self.kind {
-            for (key, value) in &self.definition {
-                writeln!(f, "{}", format!("{}: {:#?}", key, value))?
+            for (_, value) in &self.definition {
+                Display::fmt(value, f)?;
+                writeln!(f)?;
             }
             for (_, value) in &self.properties {
-                Display::fmt(value, f)?
+                Display::fmt(value, f)?;
+                writeln!(f)?;
             }
         }
         Ok(())

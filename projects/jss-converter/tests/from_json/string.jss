@@ -2,17 +2,17 @@ schema _: object {
     $id: "https://example.com/schemas/customer"
     $schema: "https://json-schema.org/draft/2020-12/schema"
 }
-property _: string {
+.first_name: string {
 }
-property _: string {
-    maxLength: Number(
-        3,
-    )
-    minLength: Number(
-        2,
-    )
+
+.last_name: string {
+    maxLength: 3
+    minLength: 2
 }
-property _: string {
+
+.shipping_address: string {
 }
-property _: /schemas/address {
+
+.billing_address: /schemas/address {
 }
+
