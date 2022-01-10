@@ -55,19 +55,6 @@ impl JssSchema {
         self.extend_properties("properties", value, errors);
         self.extend_definition("$defs", value, errors);
         self.extend_definition("definitions", value, errors);
-        match self.typing {
-            JssType::Undefined => {}
-            JssType::Anything => {}
-            JssType::Nothing => {}
-            JssType::String => {
-                let mut kind = JssSchemaString::default();
-                kind.parse_pattern("pattern", value, errors);
-                self.kind = kind.into();
-            }
-            JssType::Number => {}
-            JssType::Object => {}
-            JssType::Reference(_) => {}
-        }
     }
     fn consume_rest(&mut self, value: Value, _: &mut Vec<JssError>) {
         let object = match value.into_object() {
@@ -113,22 +100,16 @@ impl JssSchema {
     }
 }
 
-impl Default for JssSchemaString {
+impl Default for JssStringType {
     fn default() -> Self {
-        Self { pattern: "".to_string() }
+        Self { pattern: JssValue::string("") }
     }
 }
 
-impl From<JssSchemaString> for JssKind {
-    fn from(v: JssSchemaString) -> Self {
-        Self::PropertyString(Box::new(v))
+impl From<JssStringType> for JssType {
+    fn from(v: JssStringType) -> Self {
+        Self::String(Box::new(v))
     }
 }
 
-impl JssSchemaString {
-    pub fn parse_pattern(&mut self, key: &str, value: &mut Value, _: &mut Vec<JssError>) {
-        if let Some(s) = value.extract_key_as_string(key) {
-            self.pattern = s
-        }
-    }
-}
+

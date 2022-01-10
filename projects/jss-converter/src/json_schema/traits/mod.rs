@@ -1,10 +1,11 @@
 use super::*;
 
+mod debug;
 mod display;
 
 impl Default for JssKind {
     fn default() -> Self {
-        Self::PropertyUntyped
+        Self::Property
     }
 }
 

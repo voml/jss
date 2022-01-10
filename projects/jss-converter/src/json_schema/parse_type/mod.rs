@@ -1,8 +1,9 @@
 use super::*;
 
+
 impl JssType {
-    pub fn parse_value(value: &Value) -> Result<Self> {
-        match value {
+    pub fn parse_value(typing: Value, value: &mut Value, errors: Errors) -> Result<Self> {
+        match typing {
             Value::Null => {
                 unimplemented!()
             }
@@ -12,7 +13,7 @@ impl JssType {
             Value::Number(_) => {
                 unimplemented!()
             }
-            Value::String(s) => Self::parse_string(s),
+            Value::String(s) => Self::parse_string(&s, value, errors),
             Value::Array(_) => {
                 unimplemented!()
             }
@@ -21,11 +22,15 @@ impl JssType {
             }
         }
     }
-    fn parse_string(value: &str) -> Result<Self> {
-        let out = match value {
-            "string" => Self::String,
+    fn parse_string(typing: &str, value: &mut Value, errors: Errors) -> Result<Self> {
+        let out = match typing {
+            "string" => {
+                let mut t = JssStringType::default();
+                t.parse(value, errors);
+                Self::String(Box::new(t))
+            }
             "object" => Self::Object,
-            _ => unimplemented!("{}", value),
+            _ => unimplemented!("{}", typing),
         };
         Ok(out)
     }
@@ -34,18 +39,29 @@ impl JssType {
     }
 }
 
-impl JssSchema {
-    pub fn parse_type(&mut self, value: &mut Value, errors: &mut Vec<JssError>) {
-        if let Some(s) = value.extract_key("type") {
-            self.for_type(s, errors);
-            return;
-        }
-        if let Some(s) = value.extract_key("$ref") {
-            self.for_ref(s, errors)
+impl JssStringType {
+    pub fn parse(&mut self, value: &mut Value, errors: Errors) {
+        self.parse_pattern("pattern", value, errors)
+    }
+    fn parse_pattern(&mut self, key: &str, value: &mut Value, _: &mut Vec<JssError>) {
+        if let Some(s) = value.extract_key_as_string(key) {
+            self.pattern = JssValue::Regex(s)
         }
     }
-    fn for_type(&mut self, value: Value, errors: &mut Vec<JssError>) {
-        match JssType::parse_value(&value) {
+}
+
+impl JssSchema {
+    pub fn parse_type(&mut self, value: &mut Value, errors: &mut Vec<JssError>) {
+        if let Some(s) = value.extract_key("$ref") {
+            self.for_ref(s, errors);
+            return;
+        }
+        if let Some(s) = value.extract_key("type") {
+            self.for_type(s, value, errors);
+        }
+    }
+    fn for_type(&mut self, typing: Value, value: &mut Value, errors: &mut Vec<JssError>) {
+        match JssType::parse_value(typing, value, errors) {
             Ok(t) => self.typing = t,
             Err(e) => errors.push(e),
         }

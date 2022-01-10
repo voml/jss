@@ -21,34 +21,26 @@ Success {
             ],
         },
         properties: {
-            "billing_address": JssProperty {
-                type: Reference(
-                    "/schemas/address",
-                ),
-                keywords: {},
-                annotations: {},
-                properties: {},
-            },
             "first_name": JssProperty {
-                type: Reference(
-                    "#/$defs/name",
-                ),
+                type: "#/$defs/name",
                 keywords: {},
                 annotations: {},
                 properties: {},
             },
             "last_name": JssProperty {
-                type: Reference(
-                    "#/$defs/name",
-                ),
+                type: "#/$defs/name",
                 keywords: {},
                 annotations: {},
                 properties: {},
             },
             "shipping_address": JssProperty {
-                type: Reference(
-                    "/schemas/address",
-                ),
+                type: "/schemas/address",
+                keywords: {},
+                annotations: {},
+                properties: {},
+            },
+            "billing_address": JssProperty {
+                type: "/schemas/address",
                 keywords: {},
                 annotations: {},
                 properties: {},

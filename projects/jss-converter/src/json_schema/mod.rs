@@ -2,18 +2,14 @@ use crate::validation::Validation;
 use indexmap::IndexMap;
 use json_value::{JsonMaybeObject, JsonValueCheck, JsonValueWrap};
 use jss_error::{JssError, Result};
-use serde_json::{Number, Value};
+use json_value::serde_json::{Number, Value};
 
 mod parse_main;
 mod parse_type;
 mod traits;
+mod value;
 
-#[derive(Debug)]
-pub enum JssKind {
-    Scheme,
-    PropertyUntyped,
-    PropertyString(Box<JssSchemaString>),
-}
+type Errors<'a> = &'a mut Vec<JssError>;
 
 pub struct JssSchema {
     kind: JssKind,
@@ -22,22 +18,27 @@ pub struct JssSchema {
     definition: IndexMap<String, JssSchema>,
     annotation: IndexMap<String, JssValue>,
     keywords: IndexMap<String, JssValue>,
-    //
 }
-
-pub struct JssSchemaString {
-    pattern: String,
-}
-
 #[derive(Debug)]
+pub enum JssKind {
+    Scheme,
+    Property,
+}
+
 pub enum JssType {
     Undefined,
     Anything,
     Nothing,
-    String,
+    String(Box<JssStringType>),
     Number,
     Object,
     Reference(String),
+}
+
+
+pub struct JssStringType {
+    /// Jss String
+    pattern: JssValue,
 }
 
 /// Represents any valid JSON value.
@@ -45,63 +46,30 @@ pub enum JssType {
 /// See the [`serde_json::value` module documentation](self) for usage examples.
 #[derive(Clone, Eq, PartialEq)]
 pub enum JssValue {
-    /// Represents a JSON null value.
-    ///
-    /// ```
-    /// # use serde_json::json;
-    /// #
-    /// let v = json!(null);
-    /// ```
+    /// Represents a null value.
     Null,
 
-    /// Represents a JSON boolean.
-    ///
-    /// ```
-    /// # use serde_json::json;
-    /// #
-    /// let v = json!(true);
-    /// ```
+    /// Represents a boolean.
     Bool(bool),
 
     /// Represents a JSON number, whether integer or floating point.
-    ///
-    /// ```
-    /// # use serde_json::json;
-    /// #
-    /// let v = json!(12.5);
-    /// ```
     Number(Number),
 
-    /// Represents a JSON string.
-    ///
-    /// ```
-    /// # use serde_json::json;
-    /// #
-    /// let v = json!("a string");
-    /// ```
+    /// Represents a string.
     String(String),
-
-    /// Represents a JSON array.
-    ///
-    /// ```
-    /// # use serde_json::json;
-    /// #
-    /// let v = json!(["an", "array"]);
-    /// ```
+    /// Represents a url.
+    Url(String),
+    /// Represents a regex.
+    Regex(String),
+    /// Represents an array.
     Array(Vec<JssValue>),
 
-    /// Represents a JSON object.
+    /// Represents an object.
     ///
     /// By default the map is backed by a BTreeMap. Enable the `preserve_order`
     /// feature of serde_json to use IndexMap instead, which preserves
     /// entries in the order they are inserted into the map. In particular, this
     /// allows JSON data to be deserialized into a Value and serialized to a
     /// string while retaining the order of map keys in the input.
-    ///
-    /// ```
-    /// # use serde_json::json;
-    /// #
-    /// let v = json!({ "an": "object" });
-    /// ```
     Object(IndexMap<String, JssValue>),
 }
