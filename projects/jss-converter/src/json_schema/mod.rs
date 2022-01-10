@@ -1,13 +1,16 @@
+mod parse_main;
+mod parse_type;
+mod traits;
+mod value;
+
 use crate::validation::Validation;
 use indexmap::IndexMap;
 use json_value::{JsonMaybeObject, JsonValueCheck, JsonValueWrap};
 use jss_error::{JssError, Result};
 use json_value::serde_json::{Number, Value};
-
-mod parse_main;
-mod parse_type;
-mod traits;
-mod value;
+use std::fmt::Display;
+use std::fmt::{Formatter};
+use std::fmt::{Debug};
 
 type Errors<'a> = &'a mut Vec<JssError>;
 
@@ -19,6 +22,7 @@ pub struct JssSchema {
     annotation: IndexMap<String, JssValue>,
     keywords: IndexMap<String, JssValue>,
 }
+
 #[derive(Debug)]
 pub enum JssKind {
     Scheme,
