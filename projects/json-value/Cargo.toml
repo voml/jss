@@ -10,4 +10,7 @@ license = "MPL-2.0"
 edition = "2021"
 
 [dependencies]
-serde_json = "1.0.74"
+serde_json = {version = "1.0.74", optional = true}
+
+[features]
+default = ["serde_json"]
