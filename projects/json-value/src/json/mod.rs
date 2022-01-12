@@ -1,13 +1,16 @@
-use crate::{
-    json_value::{JsonArray, JsonObject},
-    JsonValue,
-};
+use crate::JsonValue;
 use serde_json::{Map, Value};
 
 impl JsonValue for Value {
     fn get_key(&self, key: &str) -> Option<&Self> {
         match self {
             Self::Object(s) => s.get(key),
+            _ => None,
+        }
+    }
+    fn extract_key(&mut self, key: &str) -> Option<Value> {
+        match self {
+            Self::Object(s) => s.remove(key),
             _ => None,
         }
     }
@@ -19,14 +22,14 @@ impl JsonValue for Value {
         }
     }
 
-    fn as_array(&self) -> Option<&dyn JsonArray<ValueType = Self>> {
+    fn as_array(&self) -> Option<&Vec<Self>> {
         match self {
             Self::Array(s) => Some(s),
             _ => None,
         }
     }
 
-    fn as_object(&self) -> Option<&dyn JsonObject<ValueType = Self>> {
+    fn as_object(&self) -> Option<&Map<String, Value>> {
         match self {
             Self::Object(s) => Some(s),
             _ => None,
@@ -51,12 +54,11 @@ impl JsonValue for Value {
             _ => false,
         }
     }
-}
 
-impl<K, V> JsonObject for Map<K, V> {
-    type ValueType = V;
-}
-
-impl<V> JsonArray for Vec<V> {
-    type ValueType = V;
+    fn into_object(self) -> Option<Map<String, Self>> {
+        match self {
+            Self::Object(o) => Some(o),
+            _ => None,
+        }
+    }
 }
