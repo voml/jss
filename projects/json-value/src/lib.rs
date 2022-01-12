@@ -1,3 +1,6 @@
 #![doc = include_str!("../Readme.md")]
 
-pub(crate) mod for_serde_json;
+mod for_serde_json;
+mod json_value;
+
+pub use json_value::JsonValue;

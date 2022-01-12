@@ -71,14 +71,24 @@ impl JssError {
     /// Constructor of [`NoteErrorKind::Unreachable`]
     #[inline]
     pub fn unreachable() -> Self {
-        Self { kind: Box::new(JssErrorKind::Unreachable), level: DiagnosticLevel::None, file: None, range: None }
+        Self {
+            kind: Box::new(JssErrorKind::Unreachable),
+            level: DiagnosticLevel::None,
+            file: None,
+            range: None,
+        }
     }
 
     /// Constructor of [`NoteErrorKind::UndefinedVariable`]
     #[inline]
     pub fn undefined_variable(name: impl Into<String>) -> JssError {
         let kind = JssErrorKind::UndefinedVariable { name: name.into() };
-        Self { kind: Box::new(kind), level: DiagnosticLevel::None, file: None, range: None }
+        Self {
+            kind: Box::new(kind),
+            level: DiagnosticLevel::None,
+            file: None,
+            range: None,
+        }
     }
 }
 
@@ -100,13 +110,13 @@ impl JssError {
 macro_rules! error_msg {
     ($name:ident => $t:ident) => {
         /// Constructor of [`NoteErrorKind::$t`]
-        pub fn $name(msg: impl Into<String>) -> NoteError {
-            let kind = NoteErrorKind::$t(msg.into());
+        pub fn $name(msg: impl Into<String>) -> JssError {
+            let kind = JssErrorKind::$t(msg.into());
             Self { kind: Box::new(kind), level: DiagnosticLevel::None, file: None, range: None }
         }
     };
     ($($name:ident => $t:ident),+ $(,)?) => (
-        impl NoteError { $(error_msg!($name=>$t);)+ }
+        impl JssError { $(error_msg!($name=>$t);)+ }
     );
 }
 
