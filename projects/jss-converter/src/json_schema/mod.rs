@@ -1,8 +1,8 @@
 use crate::validation::Validation;
-use json_value::JsonValue;
-use jsonschema::JSONSchema;
+use indexmap::IndexMap;
+use json_value::{JsonMaybeObject, JsonObject, JsonValueCheck, JsonValueWrap};
 use jss_error::{JssError, Result};
-use serde_json::{Map, Value};
+use serde_json::Value;
 
 pub(crate) mod types;
 
@@ -11,7 +11,8 @@ pub use self::types::JssType;
 #[derive(Debug)]
 pub struct JssSchema {
     annotation: JssAnnotation,
-    properties: Vec<JssProperty>,
+    properties: IndexMap<String, JssProperty>,
+    definition: IndexMap<String, JssProperty>,
 }
 
 #[derive(Debug)]
@@ -24,10 +25,31 @@ pub struct JssAnnotation {
 }
 
 impl JssAnnotation {
-    pub fn parse_type(&mut self, value: Value, errors: &mut Vec<JssError>) {
+    pub fn parse_type(&mut self, value: &mut Value, errors: &mut Vec<JssError>) {
+        if let Some(s) = value.extract_key("type") {
+            self.for_type(s, errors);
+            return;
+        }
+        if let Some(s) = value.extract_key("$ref") {
+            self.for_ref(s, errors)
+        }
+    }
+    fn for_type(&mut self, value: Value, errors: &mut Vec<JssError>) {
         match JssType::parse_value(&value) {
             Ok(t) => self.typing = t,
             Err(e) => errors.push(e),
+        }
+    }
+    fn for_ref(&mut self, value: Value, errors: &mut Vec<JssError>) {
+        match value.into_string() {
+            None => {
+                errors.push(JssError::runtime_error("$ref must string"));
+                return;
+            }
+            Some(s) => match JssType::parse_ref(s) {
+                Ok(o) => self.typing = o,
+                Err(e) => errors.push(e),
+            },
         }
     }
 }
@@ -40,7 +62,7 @@ impl Default for JssAnnotation {
 
 impl Default for JssSchema {
     fn default() -> Self {
-        Self { annotation: Default::default(), properties: vec![] }
+        Self { annotation: Default::default(), properties: Default::default(), definition: Default::default() }
     }
 }
 
@@ -55,10 +77,48 @@ impl JssSchema {
     }
 }
 
-impl JssSchema {
-    pub fn insert_properties(&mut self, value: Map<String, Value>, errors: &mut Vec<JssError>) {}
+impl Default for JssProperty {
+    fn default() -> Self {
+        Self { annotation: Default::default() }
+    }
+}
 
-    pub fn insert_definition(&mut self, value: Map<String, Value>, errors: &mut Vec<JssError>) {}
+impl JssProperty {
+    pub fn parse_value(value: Value, errors: &mut Vec<JssError>) -> Result<Self> {
+        let mut value = value;
+        let mut jss = Self::default();
+        jss.annotation.parse_type(&mut value, errors);
+
+        Ok(jss)
+    }
+}
+
+impl JssSchema {
+    pub fn extend_properties(&mut self, value: &mut Value, errors: &mut Vec<JssError>) {
+        if let Some(object) = value.extract_key_as_object("properties") {
+            for (key, value) in object {
+                match JssProperty::parse_value(value, errors) {
+                    Ok(o) => {
+                        self.properties.insert(key, o);
+                    }
+                    Err(e) => errors.push(e),
+                }
+            }
+        }
+    }
+
+    pub fn extend_definition(&mut self, value: &mut Value, errors: &mut Vec<JssError>) {
+        if let Some(object) = value.extract_key_as_object("$defs") {
+            for (key, value) in object {
+                match JssProperty::parse_value(value, errors) {
+                    Ok(o) => {
+                        self.definition.insert(key, o);
+                    }
+                    Err(e) => errors.push(e),
+                }
+            }
+        }
+    }
 }
 
 impl JssSchema {
@@ -81,15 +141,11 @@ impl JssSchema {
 
         let mut jss = JssSchema::default();
 
-        if let Some(s) = top.extract_key("type") {
-            jss.annotation.parse_type(s, &mut errors)
-        }
-        if let Some(s) = top.extract_key_as_object("properties") {
-            jss.insert_properties(s, &mut errors)
-        }
-        if let Some(s) = top.extract_key_as_object("$defs") {
-            jss.insert_definition(s, &mut errors)
-        }
+        jss.annotation.parse_type(&mut top, &mut errors);
+
+        jss.extend_properties(&mut top, &mut errors);
+        jss.extend_definition(&mut top, &mut errors);
+
         Validation::success(jss, errors)
     }
 }

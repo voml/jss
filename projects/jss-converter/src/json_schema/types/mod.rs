@@ -8,6 +8,7 @@ pub enum JssType {
     String,
     Number,
     Object,
+    Reference(String),
 }
 
 impl Default for JssType {
@@ -44,5 +45,8 @@ impl JssType {
             _ => unimplemented!("{}", value),
         };
         Ok(out)
+    }
+    pub fn parse_ref(r: String) -> Result<Self> {
+        Ok(Self::Reference(r))
     }
 }
