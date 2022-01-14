@@ -1,0 +1,45 @@
+Success {
+    result: JssSchema {
+        annotation: JssAnnotation {
+            typing: Object,
+        },
+        properties: {
+            "billing_address": JssProperty {
+                annotation: JssAnnotation {
+                    typing: Reference(
+                        "/schemas/address",
+                    ),
+                },
+            },
+            "first_name": JssProperty {
+                annotation: JssAnnotation {
+                    typing: Reference(
+                        "#/$defs/name",
+                    ),
+                },
+            },
+            "last_name": JssProperty {
+                annotation: JssAnnotation {
+                    typing: Reference(
+                        "#/$defs/name",
+                    ),
+                },
+            },
+            "shipping_address": JssProperty {
+                annotation: JssAnnotation {
+                    typing: Reference(
+                        "/schemas/address",
+                    ),
+                },
+            },
+        },
+        definition: {
+            "name": JssProperty {
+                annotation: JssAnnotation {
+                    typing: String,
+                },
+            },
+        },
+    },
+    errors: [],
+}
