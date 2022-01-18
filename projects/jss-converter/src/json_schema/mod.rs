@@ -15,7 +15,6 @@ pub enum JssKind {
     Property,
 }
 
-#[derive(Debug)]
 pub struct JssSchema {
     kind: JssKind,
     typing: JssType,

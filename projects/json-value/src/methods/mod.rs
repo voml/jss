@@ -24,6 +24,10 @@ where
         self.get_key(key).and_then(|f| f.as_object())
     }
     #[inline]
+    fn extract_key_as_string(&mut self, key: &str) -> Option<String> {
+        self.extract_key(key).and_then(|f| f.into_string())
+    }
+    #[inline]
     fn extract_key_as_object(&mut self, key: &str) -> Option<Map<String, Self>> {
         self.extract_key(key).and_then(|f| f.into_object())
     }
