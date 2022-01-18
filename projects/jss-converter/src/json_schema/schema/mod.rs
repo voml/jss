@@ -36,6 +36,7 @@ impl JssSchema {
         let mut jss = JssSchema::top();
 
         jss.parse_steps(&mut top, &mut errors);
+        jss.consume_rest(top, &mut errors);
 
         Validation::success(jss, errors)
     }
@@ -46,6 +47,7 @@ impl JssSchema {
         let mut value = value;
         let mut jss = Self::default();
         jss.parse_steps(&mut value, errors);
+        jss.consume_rest(value, errors);
         Ok(jss)
     }
     #[inline]
@@ -53,6 +55,22 @@ impl JssSchema {
         self.parse_type(value, errors);
         self.extend_properties("properties", value, errors);
         self.extend_definition("$defs", value, errors);
+        self.extend_definition("definitions", value, errors);
+        self.parse_pattern("definitions", value, errors);
+    }
+    fn consume_rest(&mut self, value: Value, _: &mut Vec<JssError>) {
+        let object = match value.into_object() {
+            None => return,
+            Some(s) => s,
+        };
+        for (k, v) in object {
+            if k.starts_with("$") {
+                self.keywords.insert(k, v)
+            }
+            else {
+                self.annotation.insert(k, v)
+            };
+        }
     }
 }
 
@@ -82,7 +100,7 @@ impl JssSchema {
             }
         }
     }
-    pub fn parse_pattern(&mut self, key: &str, value: &mut Value, errors: &mut Vec<JssError>) {
+    pub fn parse_pattern(&mut self, key: &str, value: &mut Value, _: &mut Vec<JssError>) {
         if let Some(s) = value.extract_key_as_string(key) {
             unimplemented!("{}", s)
         }

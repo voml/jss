@@ -1,13 +1,75 @@
 Success {
     result: JssScheme {
         type: Object,
+        keywords: {
+            "$id": String(
+                "https://example.com/schemas/customer",
+            ),
+            "$schema": String(
+                "https://json-schema.org/draft/2020-12/schema",
+            ),
+        },
+        annotations: {
+            "required": Array([
+                String(
+                    "first_name",
+                ),
+                String(
+                    "last_name",
+                ),
+                String(
+                    "shipping_address",
+                ),
+                String(
+                    "billing_address",
+                ),
+            ]),
+        },
         definitions: {
             "address": JssProperty {
                 type: Object,
+                keywords: {
+                    "$id": String(
+                        "/schemas/address",
+                    ),
+                    "$schema": String(
+                        "http://json-schema.org/draft-07/schema#",
+                    ),
+                },
+                annotations: {
+                    "definitions": Object({
+                        "state": Object({
+                            "enum": Array([
+                                String(
+                                    "CA",
+                                ),
+                                String(
+                                    "NY",
+                                ),
+                                String(
+                                    "... etc ...",
+                                ),
+                            ]),
+                        }),
+                    }),
+                    "required": Array([
+                        String(
+                            "street_address",
+                        ),
+                        String(
+                            "city",
+                        ),
+                        String(
+                            "state",
+                        ),
+                    ]),
+                },
                 definitions: {},
                 properties: {
                     "city": JssProperty {
                         type: String,
+                        keywords: {},
+                        annotations: {},
                         definitions: {},
                         properties: {},
                     },
@@ -15,11 +77,15 @@ Success {
                         type: Reference(
                             "#/definitions/state",
                         ),
+                        keywords: {},
+                        annotations: {},
                         definitions: {},
                         properties: {},
                     },
                     "street_address": JssProperty {
                         type: String,
+                        keywords: {},
+                        annotations: {},
                         definitions: {},
                         properties: {},
                     },
@@ -31,16 +97,22 @@ Success {
                 type: Reference(
                     "/schemas/address",
                 ),
+                keywords: {},
+                annotations: {},
                 definitions: {},
                 properties: {},
             },
             "first_name": JssProperty {
                 type: String,
+                keywords: {},
+                annotations: {},
                 definitions: {},
                 properties: {},
             },
             "last_name": JssProperty {
                 type: String,
+                keywords: {},
+                annotations: {},
                 definitions: {},
                 properties: {},
             },
@@ -48,6 +120,8 @@ Success {
                 type: Reference(
                     "/schemas/address",
                 ),
+                keywords: {},
+                annotations: {},
                 definitions: {},
                 properties: {},
             },
