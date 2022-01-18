@@ -1,12 +1,6 @@
 use super::*;
 
-impl Default for JssAnnotation {
-    fn default() -> Self {
-        Self { typing: Default::default() }
-    }
-}
-
-impl JssAnnotation {
+impl JssSchema {
     pub fn parse_type(&mut self, value: &mut Value, errors: &mut Vec<JssError>) {
         if let Some(s) = value.extract_key("type") {
             self.for_type(s, errors);

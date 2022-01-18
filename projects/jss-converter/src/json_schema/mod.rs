@@ -6,19 +6,21 @@ use serde_json::Value;
 
 mod annotation;
 mod schema;
+mod traits;
 mod types;
 
+#[derive(Debug)]
 pub enum JssKind {
     Scheme,
     Property,
 }
 
 #[derive(Debug)]
-pub struct JssProperty {
+pub struct JssSchema {
     kind: JssKind,
     typing: JssType,
-    properties: IndexMap<String, JssProperty>,
-    definition: IndexMap<String, JssProperty>,
+    properties: IndexMap<String, JssSchema>,
+    definition: IndexMap<String, JssSchema>,
 }
 
 #[derive(Debug)]
@@ -30,14 +32,4 @@ pub enum JssType {
     Number,
     Object,
     Reference(String),
-}
-
-impl JssProperty {
-    pub fn parse_value(value: Value, errors: &mut Vec<JssError>) -> Result<Self> {
-        let mut value = value;
-        let mut jss = Self::default();
-        jss.annotation.parse_type(&mut value, errors);
-
-        Ok(jss)
-    }
 }

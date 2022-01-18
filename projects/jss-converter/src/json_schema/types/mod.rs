@@ -1,10 +1,6 @@
 use super::*;
 
-impl Default for JssType {
-    fn default() -> Self {
-        Self::Undefined
-    }
-}
+mod display;
 
 impl JssType {
     pub fn parse_value(value: &Value) -> Result<Self> {
