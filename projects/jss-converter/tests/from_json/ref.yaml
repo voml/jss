@@ -1,35 +1,24 @@
 Success {
     result: JssScheme {
         type: Object,
-        keywords: {
-            "$id": String(
-                "https://example.com/schemas/customer",
-            ),
-        },
-        annotations: {
-            "required": Array([
-                String(
-                    "first_name",
-                ),
-                String(
-                    "last_name",
-                ),
-                String(
-                    "shipping_address",
-                ),
-                String(
-                    "billing_address",
-                ),
-            ]),
-        },
-        definitions: {
+        definition: {
             "name": JssProperty {
-                type: String,
+                type: string,
                 keywords: {},
                 annotations: {},
-                definitions: {},
                 properties: {},
             },
+        },
+        keywords: {
+            "$id": "https://example.com/schemas/customer",
+        },
+        annotations: {
+            "required": [
+                "first_name",
+                "last_name",
+                "shipping_address",
+                "billing_address",
+            ],
         },
         properties: {
             "billing_address": JssProperty {
@@ -38,7 +27,6 @@ Success {
                 ),
                 keywords: {},
                 annotations: {},
-                definitions: {},
                 properties: {},
             },
             "first_name": JssProperty {
@@ -47,7 +35,6 @@ Success {
                 ),
                 keywords: {},
                 annotations: {},
-                definitions: {},
                 properties: {},
             },
             "last_name": JssProperty {
@@ -56,7 +43,6 @@ Success {
                 ),
                 keywords: {},
                 annotations: {},
-                definitions: {},
                 properties: {},
             },
             "shipping_address": JssProperty {
@@ -65,7 +51,6 @@ Success {
                 ),
                 keywords: {},
                 annotations: {},
-                definitions: {},
                 properties: {},
             },
         },

@@ -1,76 +1,25 @@
 Success {
     result: JssScheme {
         type: Object,
-        keywords: {
-            "$id": String(
-                "https://example.com/schemas/customer",
-            ),
-            "$schema": String(
-                "https://json-schema.org/draft/2020-12/schema",
-            ),
-        },
-        annotations: {
-            "required": Array([
-                String(
-                    "first_name",
-                ),
-                String(
-                    "last_name",
-                ),
-                String(
-                    "shipping_address",
-                ),
-                String(
-                    "billing_address",
-                ),
-            ]),
-        },
-        definitions: {
+        definition: {
             "address": JssProperty {
                 type: Object,
                 keywords: {
-                    "$id": String(
-                        "/schemas/address",
-                    ),
-                    "$schema": String(
-                        "http://json-schema.org/draft-07/schema#",
-                    ),
+                    "$id": "/schemas/address",
+                    "$schema": "http://json-schema.org/draft-07/schema#",
                 },
                 annotations: {
-                    "definitions": Object({
-                        "state": Object({
-                            "enum": Array([
-                                String(
-                                    "CA",
-                                ),
-                                String(
-                                    "NY",
-                                ),
-                                String(
-                                    "... etc ...",
-                                ),
-                            ]),
-                        }),
-                    }),
-                    "required": Array([
-                        String(
-                            "street_address",
-                        ),
-                        String(
-                            "city",
-                        ),
-                        String(
-                            "state",
-                        ),
-                    ]),
+                    "required": [
+                        "street_address",
+                        "city",
+                        "state",
+                    ],
                 },
-                definitions: {},
                 properties: {
                     "city": JssProperty {
-                        type: String,
+                        type: string,
                         keywords: {},
                         annotations: {},
-                        definitions: {},
                         properties: {},
                     },
                     "state": JssProperty {
@@ -79,18 +28,28 @@ Success {
                         ),
                         keywords: {},
                         annotations: {},
-                        definitions: {},
                         properties: {},
                     },
                     "street_address": JssProperty {
-                        type: String,
+                        type: string,
                         keywords: {},
                         annotations: {},
-                        definitions: {},
                         properties: {},
                     },
                 },
             },
+        },
+        keywords: {
+            "$id": "https://example.com/schemas/customer",
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+        },
+        annotations: {
+            "required": [
+                "first_name",
+                "last_name",
+                "shipping_address",
+                "billing_address",
+            ],
         },
         properties: {
             "billing_address": JssProperty {
@@ -99,21 +58,18 @@ Success {
                 ),
                 keywords: {},
                 annotations: {},
-                definitions: {},
                 properties: {},
             },
             "first_name": JssProperty {
-                type: String,
+                type: string,
                 keywords: {},
                 annotations: {},
-                definitions: {},
                 properties: {},
             },
             "last_name": JssProperty {
-                type: String,
+                type: string,
                 keywords: {},
                 annotations: {},
-                definitions: {},
                 properties: {},
             },
             "shipping_address": JssProperty {
@@ -122,7 +78,6 @@ Success {
                 ),
                 keywords: {},
                 annotations: {},
-                definitions: {},
                 properties: {},
             },
         },
