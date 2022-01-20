@@ -1,3 +1,4 @@
+
 use super::*;
 
 impl JssSchema {
@@ -16,6 +17,10 @@ impl JssSchema {
 }
 
 impl JssSchema {
+    pub fn parse_json_schema_as_jss(top: Value) -> Result<String> {
+        Self::parse_json_schema(top).result().map(|jss| jss.to_string())
+    }
+
     pub fn parse_json_schema(top: Value) -> Validation<Self, JssError> {
         let mut top = top;
         let mut errors = vec![];
