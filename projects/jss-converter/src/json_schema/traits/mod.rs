@@ -19,6 +19,8 @@ impl Default for JssSchema {
     fn default() -> Self {
         Self {
             kind: Default::default(),
+            name: None,
+            description: None,
             typing: Default::default(),
             properties: Default::default(),
             definition: Default::default(),

@@ -16,6 +16,8 @@ type Errors<'a> = &'a mut Vec<JssError>;
 
 pub struct JssSchema {
     kind: JssKind,
+    name: Option<String>,
+    description: Option<String>,
     typing: JssType,
     properties: IndexMap<String, JssSchema>,
     definition: IndexMap<String, JssSchema>,
@@ -27,8 +29,11 @@ pub struct JssSchema {
 pub enum JssKind {
     Scheme,
     Property,
+    PropertyTop,
+    Definition
 }
 
+#[derive(PartialEq)]
 pub enum JssType {
     Undefined,
     Anything,
@@ -39,7 +44,7 @@ pub enum JssType {
     Reference(String),
 }
 
-
+#[derive(PartialEq)]
 pub struct JssStringType {
     /// Jss String
     pattern: JssValue,
