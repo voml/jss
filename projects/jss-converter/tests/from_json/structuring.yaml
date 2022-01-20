@@ -16,6 +16,12 @@ Success {
                     ],
                 },
                 properties: {
+                    "street_address": JssProperty {
+                        type: string,
+                        keywords: {},
+                        annotations: {},
+                        properties: {},
+                    },
                     "city": JssProperty {
                         type: string,
                         keywords: {},
@@ -23,15 +29,7 @@ Success {
                         properties: {},
                     },
                     "state": JssProperty {
-                        type: Reference(
-                            "#/definitions/state",
-                        ),
-                        keywords: {},
-                        annotations: {},
-                        properties: {},
-                    },
-                    "street_address": JssProperty {
-                        type: string,
+                        type: "#/definitions/state",
                         keywords: {},
                         annotations: {},
                         properties: {},
@@ -52,14 +50,6 @@ Success {
             ],
         },
         properties: {
-            "billing_address": JssProperty {
-                type: Reference(
-                    "/schemas/address",
-                ),
-                keywords: {},
-                annotations: {},
-                properties: {},
-            },
             "first_name": JssProperty {
                 type: string,
                 keywords: {},
@@ -73,9 +63,13 @@ Success {
                 properties: {},
             },
             "shipping_address": JssProperty {
-                type: Reference(
-                    "/schemas/address",
-                ),
+                type: "/schemas/address",
+                keywords: {},
+                annotations: {},
+                properties: {},
+            },
+            "billing_address": JssProperty {
+                type: "/schemas/address",
                 keywords: {},
                 annotations: {},
                 properties: {},

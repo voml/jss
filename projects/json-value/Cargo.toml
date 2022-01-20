@@ -4,7 +4,7 @@ version = "0.3.0"
 authors = ["Aster <192607617@qq.com>"]
 description = "Helper method to get the josn value"
 repository = "https://github.com/notedge/panduck/tree/master/projects/lipsum-cn"
-documentation = "https://docs.rs/lipsum-cn"
+documentation = "https://docs.rs/json-value"
 readme = "../../readme.md"
 license = "MPL-2.0"
 edition = "2021"
@@ -13,4 +13,4 @@ edition = "2021"
 serde_json = {version = "1.0.74", optional = true}
 
 [features]
-default = ["serde_json"]
+default = ["serde_json", "serde_json/preserve_order"]

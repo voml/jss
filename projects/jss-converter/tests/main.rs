@@ -1,5 +1,5 @@
 use jss_convert::JssSchema;
-use serde_json::Value;
+use json_value::serde_json::Value;
 
 mod from_json;
 

@@ -8,14 +8,6 @@ Success {
         },
         annotations: {},
         properties: {
-            "billing_address": JssProperty {
-                type: Reference(
-                    "/schemas/address",
-                ),
-                keywords: {},
-                annotations: {},
-                properties: {},
-            },
             "first_name": JssProperty {
                 type: string,
                 keywords: {},
@@ -37,8 +29,14 @@ Success {
             },
             "shipping_address": JssProperty {
                 type: string {
-                    pattern: "^(\\([0-9]{3}\\))?[0-9]{3}-[0-9]{4}$",
+                    pattern: ^(\([0-9]{3}\))?[0-9]{3}-[0-9]{4}$,
                 },
+                keywords: {},
+                annotations: {},
+                properties: {},
+            },
+            "billing_address": JssProperty {
+                type: "/schemas/address",
                 keywords: {},
                 annotations: {},
                 properties: {},
