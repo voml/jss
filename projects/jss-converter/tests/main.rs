@@ -8,13 +8,13 @@ fn ready() {
     println!("it works!")
 }
 
-fn convert_from_json_schema_debug(source: &str, target: &str) {
+pub fn convert_from_json_schema_debug(source: &str, target: &str) {
     let top = source.parse::<Value>().unwrap();
     let jss = JssSchema::parse_json_schema(top);
     assert_eq!(format!("{:#?}", jss), target)
 }
 
-fn convert_from_json_schema(source: &str, target: &str) {
+pub fn convert_from_json_schema(source: &str, target: &str) {
     let top = source.parse::<Value>().unwrap();
     let jss = JssSchema::parse_json_schema_as_jss(top);
     assert_eq!(format!("{:#}", jss.unwrap()), target)

@@ -26,7 +26,7 @@ impl Debug for JssValue {
         match self {
             Self::Null => f.write_str("null"),
             Self::Bool(v) => Debug::fmt(v, f),
-            Self::Number(v) => Debug::fmt(v, f),
+            Self::Number(v) => Display::fmt(v, f),
             Self::String(v) => Debug::fmt(v, f),
             Self::Url(v) => f.write_str(v),
             Self::Regex(v) => f.write_str(v),

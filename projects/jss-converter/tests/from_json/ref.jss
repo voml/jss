@@ -7,33 +7,18 @@ schema _: object {
         "billing_address",
     ]
 }
-name: JssProperty {
-    type: string,
-    keywords: {},
-    annotations: {},
-    properties: {},
+def name: string {
 }
-first_name: JssProperty {
-    type: "#/$defs/name",
-    keywords: {},
-    annotations: {},
-    properties: {},
+
+.first_name: #/$defs/name {
 }
-last_name: JssProperty {
-    type: "#/$defs/name",
-    keywords: {},
-    annotations: {},
-    properties: {},
+
+.last_name: #/$defs/name {
 }
-shipping_address: JssProperty {
-    type: "/schemas/address",
-    keywords: {},
-    annotations: {},
-    properties: {},
+
+.shipping_address: /schemas/address {
 }
-billing_address: JssProperty {
-    type: "/schemas/address",
-    keywords: {},
-    annotations: {},
-    properties: {},
+
+.billing_address: /schemas/address {
 }
+

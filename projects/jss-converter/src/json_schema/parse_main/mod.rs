@@ -1,4 +1,3 @@
-
 use super::*;
 
 impl JssSchema {
@@ -40,7 +39,7 @@ impl JssSchema {
 
         let mut jss = JssSchema::top();
 
-        jss.parse_steps(&mut top, &mut errors);
+        jss.parse_steps(true, &mut top, &mut errors);
         jss.consume_rest(top, &mut errors);
 
         Validation::success(jss, errors)
@@ -48,16 +47,17 @@ impl JssSchema {
 }
 
 impl JssSchema {
-    pub fn parse_value(value: Value, errors: &mut Vec<JssError>) -> Result<Self> {
+    pub fn parse_value(name: String, value: Value, errors: &mut Vec<JssError>) -> Result<Self> {
         let mut value = value;
         let mut jss = Self::default();
-        jss.parse_steps(&mut value, errors);
+        jss.name = Some(name);
+        jss.parse_steps(false, &mut value, errors);
         jss.consume_rest(value, errors);
         Ok(jss)
     }
-    fn parse_steps(&mut self, value: &mut Value, errors: &mut Vec<JssError>) {
+    fn parse_steps(&mut self, is_top: bool, value: &mut Value, errors: &mut Vec<JssError>) {
         self.parse_type(value, errors);
-        self.extend_properties("properties", value, errors);
+        self.extend_properties("properties", is_top, value, errors);
         self.extend_definition("$defs", value, errors);
         self.extend_definition("definitions", value, errors);
     }
@@ -69,8 +69,7 @@ impl JssSchema {
         for (k, v) in object {
             if k.starts_with("$") {
                 self.keywords.insert(k, v.into())
-            }
-            else {
+            } else {
                 self.annotation.insert(k, v.into())
             };
         }
@@ -78,11 +77,14 @@ impl JssSchema {
 }
 
 impl JssSchema {
-    pub fn extend_properties(&mut self, key: &str, value: &mut Value, errors: &mut Vec<JssError>) {
+    pub fn extend_properties(&mut self, key: &str, is_top: bool, value: &mut Value, errors: Errors) {
         if let Some(object) = value.extract_key_as_object(key) {
             for (key, value) in object {
-                match JssSchema::parse_value(value, errors) {
-                    Ok(o) => {
+                match JssSchema::parse_value(key.to_owned(), value, errors) {
+                    Ok(mut o) => {
+                        if is_top {
+                            o.kind = JssKind::PropertyTop
+                        }
                         self.properties.insert(key, o);
                     }
                     Err(e) => errors.push(e),
@@ -94,8 +96,9 @@ impl JssSchema {
     pub fn extend_definition(&mut self, key: &str, value: &mut Value, errors: &mut Vec<JssError>) {
         if let Some(object) = value.extract_key_as_object(key) {
             for (key, value) in object {
-                match JssSchema::parse_value(value, errors) {
-                    Ok(o) => {
+                match JssSchema::parse_value(key.to_owned(), value, errors) {
+                    Ok(mut o) => {
+                        o.kind = JssKind::Definition;
                         self.definition.insert(key, o);
                     }
                     Err(e) => errors.push(e),
