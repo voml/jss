@@ -6,14 +6,12 @@ use super::*;
 impl Display for JssSchema {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         self.description(f)?;
-
         match self.kind {
             JssKind::Scheme => { f.write_str("schema ") }
-            JssKind::Property => {f.write_str("property ")}
-            JssKind::PropertyTop => {f.write_str(".")}
+            JssKind::Property => {f.write_str(".")}
+            JssKind::PropertyTop => {f.write_str("prop ")}
             JssKind::Definition => {f.write_str("def ")}
         }?;
-
         self.head(f)?;
         for (key, value) in &self.keywords {
             writeln!(f, "{}", indent(format!("{}: {:#?}", key, value), 4))?;
@@ -95,7 +93,7 @@ impl Display for JssType {
             Self::String(_) => { write!(f, ": string") }
             Self::Number => { write!(f, ": number") }
             Self::Object => { write!(f, ": object") }
-            Self::Reference(v) => { write!(f, ": {}", v) }
+            Self::Reference(v) => { write!(f, ": {:?}", v) }
         }
     }
 }

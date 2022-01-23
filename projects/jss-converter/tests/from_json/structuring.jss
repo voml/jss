@@ -16,29 +16,29 @@ def address: object {
         "city",
         "state",
     ]
-    property street_address: string {
+    .street_address: string {
     }
 
 
-    property city: string {
+    .city: string {
     }
 
 
-    property state: #/definitions/state {
+    .state: "#/definitions/state" {
     }
 
 
 }
 
-.first_name: string {
+prop first_name: string {
 }
 
-.last_name: string {
+prop last_name: string {
 }
 
-.shipping_address: /schemas/address {
+prop shipping_address: "/schemas/address" {
 }
 
-.billing_address: /schemas/address {
+prop billing_address: "/schemas/address" {
 }
 

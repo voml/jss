@@ -10,15 +10,15 @@ schema _: object {
 def name: string {
 }
 
-.first_name: #/$defs/name {
+prop first_name: "#/$defs/name" {
 }
 
-.last_name: #/$defs/name {
+prop last_name: "#/$defs/name" {
 }
 
-.shipping_address: /schemas/address {
+prop shipping_address: "/schemas/address" {
 }
 
-.billing_address: /schemas/address {
+prop billing_address: "/schemas/address" {
 }
 
