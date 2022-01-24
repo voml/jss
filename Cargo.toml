@@ -5,8 +5,12 @@ default-members = [
     "projects/jss-cli",
     "projects/jss-core",
     "projects/jss-error",
-    "projects/jss-converter",
-    "projects/jss-generator",
+    "projects/jss-from",
+    "projects/jss-into",
+    "projects/jss-wasm",
+]
+exclude = [
+    "projects/node-test",
 ]
 
 [profile.release]
