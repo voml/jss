@@ -1,5 +1,13 @@
 #![doc = include_str!("../Readme.md")]
 
-pub use hans::废话生成器;
+use wasm_bindgen::prelude::*;
 
-mod hans;
+#[wasm_bindgen]
+pub fn from_json_string(json: &str) -> String {
+    json.to_string()
+}
+
+#[wasm_bindgen]
+pub fn into_json_string(jss: &str) -> String {
+    "jss".to_string()
+}

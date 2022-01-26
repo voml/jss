@@ -1,6 +1,8 @@
 {
     "private": true,
     "scripts": {
-        "p": "cargo publish --allow-dirty"
+        "p": "cd pkg && npm publish",
+        "b" : "wasm-pack build --target nodejs",
+        "u": "wee b && wee p"
     }
 }
