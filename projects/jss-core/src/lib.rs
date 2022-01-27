@@ -1,5 +1,11 @@
 #![doc = include_str!("../Readme.md")]
 
-pub use hans::废话生成器;
+pub use self::errors::{JssError, JssErrorKind, Result};
 
-mod hans;
+mod errors;
+
+mod from;
+
+mod into;
+
+mod schema;
