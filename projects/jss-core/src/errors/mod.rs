@@ -1,13 +1,22 @@
-use std::error::Error;
-use std::fmt::{Display, Formatter};
+mod from_serde_json;
+mod from_validate;
+use std::{
+    error::Error,
+    fmt::{Display, Formatter},
+};
 
 /// All result about jss
 pub type Result<T> = std::result::Result<T, JssError>;
+/// Errors Collector
+pub type Errors<'a> = &'a mut Vec<JssError>;
+
 /// Error type for all jss operators
 #[derive(Debug)]
 pub struct JssError {
     /// Actual error kind
     pub kind: Box<JssErrorKind>,
+    pub line: u32,
+    pub column: u32,
 }
 
 /// Actual error data for the error
@@ -20,10 +29,12 @@ pub enum JssErrorKind {
     FormatError(std::fmt::Error),
     /// The error type which is
     SyntaxError(String),
-    /// The error type which is
-    TypeMismatch(String),
     /// The error type which is occurred at runtime
     RuntimeError(String),
+    /// The error type which is
+    TypeMismatch(String),
+    /// The error type which is
+    ValidationFail(String),
     /// Runtime error when variable is undefined
     UndefinedVariable {
         /// The name of the undefined variable
@@ -34,25 +45,6 @@ pub enum JssErrorKind {
     // #[error(transparent)]
     // UnknownError(#[from] anyhow::Error),
 }
-
-macro_rules! error_msg {
-    ($name:ident => $t:ident) => {
-        /// Constructor of [`JssErrorKind::$t`]
-        pub fn $name(msg: impl Into<String>) -> JssError {
-            let kind = JssErrorKind::$t(msg.into());
-            Self { kind: Box::new(kind), level: DiagnosticLevel::None, file: None, range: None }
-        }
-    };
-    ($($name:ident => $t:ident),+ $(,)?) => (
-        impl JssError { $(error_msg!($name=>$t);)+ }
-    );
-}
-
-error_msg![
-    syntax_error => SyntaxError,
-    type_mismatch => TypeMismatch,
-    runtime_error => RuntimeError,
-];
 
 impl Error for JssError {}
 
@@ -80,6 +72,10 @@ impl Display for JssErrorKind {
                 f.write_str(msg)
             }
             Self::RuntimeError(msg) => {
+                f.write_str("RuntimeError: ")?;
+                f.write_str(msg)
+            }
+            JssErrorKind::ValidationFail(msg) => {
                 f.write_str("RuntimeError: ")?;
                 f.write_str(msg)
             }

@@ -12,6 +12,8 @@ edition = "2021"
 [dependencies]
 jsonschema = "0.16.0"
 serde_json = "1.0.82"
+indexmap = "1.9.1"
+json-value = {version = "0.3.0", path = "../json-value"}
 
 rand = { version = "0.8.4", features = ["small_rng"] }
 dynfmt = { version = "0.1.5", features = ["curly"] }
