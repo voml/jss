@@ -3,8 +3,7 @@
 mod json;
 mod methods;
 
-pub use methods::*;
+pub use self::methods::*;
+pub use serde_json::{Number, Value};
 
-pub extern crate serde_json;
-
-pub type JsonObject = serde_json::Map<String, serde_json::Value>;
+pub type JsonObject = serde_json::Map<String, Value>;

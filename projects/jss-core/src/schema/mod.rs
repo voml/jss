@@ -3,13 +3,8 @@ mod parse_type;
 mod traits;
 mod value;
 
-use crate::validation::Validation;
 use indexmap::IndexMap;
-use json_value::{
-    serde_json::{Number, Value},
-    JsonMaybeObject, JsonValueCheck, JsonValueWrap,
-};
-use jss_error::{JssError, Result};
+use json_value::{JsonMaybeObject, JsonValueCheck, JsonValueWrap, Number, Value};
 use std::fmt::{Debug, Display, Formatter};
 
 pub struct JssSchema {
