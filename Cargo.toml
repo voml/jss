@@ -4,9 +4,7 @@ members = ["projects/*"]
 default-members = [
     "projects/jss-cli",
     "projects/jss-core",
-    "projects/jss-error",
-    "projects/jss-from",
-    "projects/jss-into",
+    "projects/jss-pest",
     "projects/jss-wasm",
 ]
 exclude = [
