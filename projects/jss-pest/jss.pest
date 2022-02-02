@@ -3,32 +3,37 @@ statement = _{
     SEPARATOR
   | EmptyLine{1,}
   | schema_statement
+  | property_statement
 }
 EmptyLine  = @{WHITESPACE* ~ NEWLINE}
 /*====================================================================================================================*/
-//!#C678DD: Import
-// include_statement = {"@include" ~ "(" ~ StringNormal ~ ("," ~ SYMBOL) ~ ")"}
-schema_statement =  {"schema" ~ SYMBOL ~ type_hint? ~ property_block}
-define_statement =  {_define ~ SYMBOL? ~ StringNormal}
+schema_statement =  {"schema" ~ SYMBOL ~ COLON ~ object}
+/*====================================================================================================================*/
+define_statement =  {_define ~ SYMBOL? ~ STRING_INLINE}
 _define = _{"def"|"define"}
 /*====================================================================================================================*/
-property_block = {"{" ~ (property_valid|SEPARATOR)* ~ "}"}
-property_valid = _{normal_filed|dot_filed}
+property_statement = {_property ~ SYMBOL ~ COLON ~ object}
+_property = _{"property"|"properties"|"prop"|DOT}
+DOT       = @{"."}
 /*====================================================================================================================*/
-normal_filed = {SYMBOL ~ SET ~ data}
-dot_filed = {_property ~ SYMBOL ~ type_hint? ~ property_block}
-_property = _{"property"|Dot}
+block = {"{" ~ (block_valid|SEPARATOR)* ~ "}"}
+block_valid = _{property_statement|attitude_statement}
+/*====================================================================================================================*/
+attitude_statement = {key ~ SET ~ data}
+key = {SYMBOL|string}
 /*====================================================================================================================*/
 pair = {SYMBOL ~ SET}
 /*====================================================================================================================*/
-type_hint = {COLON ~ SYMBOL}
 COLON = @{":"}
 SET = @{":"|"="}
 /*====================================================================================================================*/
 data = !{
     URL | Special|Cite|Byte|Number
-  | String
+  | string | array | object
 }
+/*====================================================================================================================*/
+object = {SYMBOL ~ block | SYMBOL | block}
+array = {"["  ~ (data|SEPARATOR)*  ~  "]"}
 /*====================================================================================================================*/
 ///#D19A66
 Special = @{"true"|"false"|"null"}
@@ -40,41 +45,33 @@ Cite = ${"$" ~ "namespace"}
 //!#D19A66: SignedNumber
 Number       = ${(Exponent|SignedNumber) ~ SYMBOL?}
 SignedNumber = ${Sign? ~ (Decimal|DecimalBad|Integer)}
-Decimal      = ${Integer ~ Dot ~ ("_"? ~ ASCII_DIGIT)*}
-DecimalBad   = ${Integer ~ Dot|Dot ~ ("_"? ~ ASCII_DIGIT)*}
+Decimal      = ${Integer ~ DOT ~ ("_"? ~ ASCII_DIGIT)*}
+DecimalBad   = ${Integer ~ DOT|DOT ~ ("_"? ~ ASCII_DIGIT)*}
 //Integer    = @{"0"|ASCII_NONZERO_DIGIT ~ ("_"? ~ ASCII_DIGIT)*}
 Integer      = @{ASCII_DIGIT ~ ("_"? ~ ASCII_DIGIT)*}
 Exponent     = ${SignedNumber ~ ("e"|"E"|"**") ~ Sign? ~ ASCII_DIGIT+}
 Sign         = @{"+"|"-"}
 /*====================================================================================================================*/
-//!#3C963C: String|InlineString|InlineString2|RestLineText
-//!#98C379: StringQuotation|StringAccent
-//!#D19A66: StringApostrophe
-String       = !{SYMBOL? ~ (StringNormal|StringEmpty)}
-StringEmpty  = @{S1{2}|S2{2}}
-StringNormal = ${
-    S1{1} ~ PUSH(S1*) ~ (NS1)+ ~ POP ~ S1{1}
-  | S2{1} ~ PUSH(S2*) ~ (NS2)+ ~ POP ~ S2{1}
-//| "‹" ~ NS3 ~ "›"
-//| "«" ~ NS4 ~ "»"
+/// #98C379
+string       = {(STRING_INLINE)}
+STRING_INLINE = ${
+    S1 ~ (NS|NS1)* ~ S1
+  | S2 ~ (NS|NS2)* ~ S2
 }
-NS1 = @{(!(S1 ~ PEEK) ~ ANY)+}
-NS2 = @{
+NS  = @{
     "\\u" ~ ASCII_HEX_DIGIT{4}
   | "\\u" ~ "{" ~(ASCII_HEX_DIGIT|SPACE_SEPARATOR)+ ~ "}"
   | "\\" ~ ANY
-  | (!(S2 ~ PEEK) ~ ANY)+
 }
-// NS3 = @{(!"»" ~ ANY)+}
-// NS4 = @{Escape ~ ANY|(!"»" ~ ANY)+}
-S1 = @{"'"}
-S2 = @{"\""}
+S1  = @{"'"}
+S2  = @{"\""}
+NS1 = @{!S1 ~ ANY}
+NS2 = @{!S2 ~ ANY}
 /*====================================================================================================================*/
 ///#61AFEF
 SYMBOL = @{(XID_START|"_"|"$") ~ (XID_CONTINUE|"_"|"-")*}
 ///#3C963C
 URL    = @{ASCII_ALPHA+ ~ "://" ~ (XID_CONTINUE|"_"|"-"|"/"|".")*}
-Dot    = @{"."}
 /*====================================================================================================================*/
 // NEWLINE = @{"\r" ~ "\n"|"\r"|"\n"}
 
