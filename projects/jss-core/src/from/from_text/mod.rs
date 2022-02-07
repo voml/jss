@@ -23,19 +23,18 @@ macro_rules! debug_cases {
 }
 
 struct ParseContext {
-    schema: JssSchema,
     errors: Vec<JssError>,
 }
 
 impl Default for ParseContext {
     fn default() -> Self {
-        Self { schema: Default::default(), errors: vec![] }
+        Self { top_level: JssSchema::top(), errors: vec![] }
     }
 }
 
 impl From<ParseContext> for JssSchema {
     fn from(ctx: ParseContext) -> Self {
-        ctx.schema
+        ctx.top_level
     }
 }
 
@@ -54,10 +53,48 @@ impl ParseContext {
     pub fn parse_schema_statement(&mut self, pairs: Pair<Rule>) -> Result<()> {
         for pair in pairs.into_inner() {
             match pair.as_rule() {
-                Rule::SYMBOL => self.schema.set_name(pair.as_str()),
+                Rule::SYMBOL => self.top_level.set_name(pair.as_str()),
+                Rule::object => {
+                    let ptr = &mut self.top_level;
+                    self.parse_object(pair, ptr)?
+                }
+                _ => unreachable!(),
+            }
+        }
+        Ok(())
+    }
+}
+
+impl ParseContext {
+    pub fn parse_object(&self, pairs: Pair<Rule>, node: &mut JssSchema) -> Result<()> {
+        for pair in pairs.into_inner() {
+            match pair.as_rule() {
+                Rule::key => {
+                    let key = self.parse_key(pair)?;
+                }
+                Rule::block => {
+                    let block = self.parse_block(pair)?;
+                }
                 _ => debug_cases!(pair),
             }
         }
         Ok(())
+    }
+    pub fn parse_block(&self, pairs: Pair<Rule>) -> Result<String> {
+        for pair in pairs.into_inner() {
+            match pair.as_rule() {
+                _ => debug_cases!(pair),
+            }
+        }
+        Err(JssError::unreachable())
+    }
+    pub fn parse_key(&self, pairs: Pair<Rule>) -> Result<String> {
+        for pair in pairs.into_inner() {
+            match pair.as_rule() {
+                Rule::SYMBOL => return Ok(pair.as_str().to_string()),
+                _ => debug_cases!(pair),
+            }
+        }
+        Err(JssError::unreachable())
     }
 }

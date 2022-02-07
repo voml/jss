@@ -63,6 +63,10 @@ impl JssError {
         let kind = JssErrorKind::RuntimeError(msg.into());
         Self { kind: Box::new(kind), line: 0, column: 0 }
     }
+
+    pub fn unreachable() -> Self {
+        Self { kind: Box::new(JssErrorKind::Unreachable), line: 0, column: 0 }
+    }
 }
 
 impl Error for JssError {}

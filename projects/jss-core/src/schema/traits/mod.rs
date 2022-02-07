@@ -16,9 +16,10 @@ impl Default for JssType {
 }
 
 impl Default for JssSchema {
+    /// Property Node
     fn default() -> Self {
         Self {
-            kind: Default::default(),
+            kind: JssKind::Property,
             name: None,
             description: None,
             typing: Default::default(),
@@ -30,16 +31,22 @@ impl Default for JssSchema {
     }
 }
 
-impl From<JsonValue> for JssValue {
-    fn from(v: JsonValue) -> Self {
-        match v {
-            JsonValue::Null => Self::Null,
-            JsonValue::Bool(v) => Self::Bool(v),
-            JsonValue::Number(v) => Self::Number(v),
-            JsonValue::String(v) => Self::String(v),
-            JsonValue::Array(v) => Self::Array(v.into_iter().map(|v| v.into()).collect()),
-            JsonValue::Object(v) => Self::Object(v.into_iter().map(|(k, v)| (k, v.into())).collect()),
-        }
+impl JssSchema {
+    #[inline]
+    pub fn property() -> Self {
+        Self::default()
+    }
+    #[inline]
+    pub fn anything() -> Self {
+        Self { kind: JssKind::Scheme, typing: JssType::Anything, ..Default::default() }
+    }
+    #[inline]
+    pub fn nothing() -> Self {
+        Self { kind: JssKind::Scheme, typing: JssType::Nothing, ..Default::default() }
+    }
+    #[inline]
+    pub fn top() -> Self {
+        Self { kind: JssKind::Scheme, typing: JssType::Undefined, ..Default::default() }
     }
 }
 
