@@ -1,12 +1,12 @@
 mod from_text;
 
 use crate::JssError;
-use json_value::Value;
+use json_value::JsonValue;
 use jsonschema::{Draft, JSONSchema};
 use std::str::FromStr;
 
 fn valid_from_string() -> Result<(), JssError> {
-    let schema = Value::from_str(
+    let schema = JsonValue::from_str(
         r#"
         {"maxLength": 5}
     "#,

@@ -2,27 +2,27 @@ use super::*;
 use crate::{Errors, JssError, Result};
 
 impl JssType {
-    pub fn parse_value(typing: Value, value: &mut Value, errors: Errors) -> Result<Self> {
+    pub fn parse_value(typing: JsonValue, value: &mut JsonValue, errors: Errors) -> Result<Self> {
         match typing {
-            Value::Null => {
+            JsonValue::Null => {
                 unimplemented!()
             }
-            Value::Bool(_) => {
+            JsonValue::Bool(_) => {
                 unimplemented!()
             }
-            Value::Number(_) => {
+            JsonValue::Number(_) => {
                 unimplemented!()
             }
-            Value::String(s) => Self::parse_string(&s, value, errors),
-            Value::Array(_) => {
+            JsonValue::String(s) => Self::parse_string(&s, value, errors),
+            JsonValue::Array(_) => {
                 unimplemented!()
             }
-            Value::Object(_) => {
+            JsonValue::Object(_) => {
                 unimplemented!()
             }
         }
     }
-    fn parse_string(typing: &str, value: &mut Value, errors: Errors) -> Result<Self> {
+    fn parse_string(typing: &str, value: &mut JsonValue, errors: Errors) -> Result<Self> {
         let out = match typing {
             "string" => {
                 let mut t = JssStringType::default();
@@ -40,10 +40,10 @@ impl JssType {
 }
 
 impl JssStringType {
-    pub fn parse(&mut self, value: &mut Value, errors: Errors) {
+    pub fn parse(&mut self, value: &mut JsonValue, errors: Errors) {
         self.parse_pattern("pattern", value, errors)
     }
-    fn parse_pattern(&mut self, key: &str, value: &mut Value, _: Errors) {
+    fn parse_pattern(&mut self, key: &str, value: &mut JsonValue, _: Errors) {
         if let Some(s) = value.extract_key_as_string(key) {
             self.pattern = JssValue::Regex(s)
         }
@@ -51,7 +51,7 @@ impl JssStringType {
 }
 
 impl JssSchema {
-    pub fn parse_type(&mut self, value: &mut Value, errors: Errors) {
+    pub fn parse_type(&mut self, value: &mut JsonValue, errors: Errors) {
         if let Some(s) = value.extract_key("$ref") {
             self.for_ref(s, errors);
             return;
@@ -60,13 +60,13 @@ impl JssSchema {
             self.for_type(s, value, errors);
         }
     }
-    fn for_type(&mut self, typing: Value, value: &mut Value, errors: Errors) {
+    fn for_type(&mut self, typing: JsonValue, value: &mut JsonValue, errors: Errors) {
         match JssType::parse_value(typing, value, errors) {
             Ok(t) => self.typing = t,
             Err(e) => errors.push(e),
         }
     }
-    fn for_ref(&mut self, value: Value, errors: Errors) {
+    fn for_ref(&mut self, value: JsonValue, errors: Errors) {
         match value.into_string() {
             None => {
                 errors.push(JssError::runtime_error("`$ref` must string"));

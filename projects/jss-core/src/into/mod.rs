@@ -1,7 +1,7 @@
 use crate::JssSchema;
-use json_value::Value;
+use json_value::JsonValue;
 
-impl From<JssSchema> for Value {
+impl From<JssSchema> for JsonValue {
     fn from(_: JssSchema) -> Self {
         todo!()
     }

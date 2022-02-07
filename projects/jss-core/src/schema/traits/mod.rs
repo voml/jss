@@ -30,15 +30,24 @@ impl Default for JssSchema {
     }
 }
 
-impl From<Value> for JssValue {
-    fn from(v: Value) -> Self {
+impl From<JsonValue> for JssValue {
+    fn from(v: JsonValue) -> Self {
         match v {
-            Value::Null => Self::Null,
-            Value::Bool(v) => Self::Bool(v),
-            Value::Number(v) => Self::Number(v),
-            Value::String(v) => Self::String(v),
-            Value::Array(v) => Self::Array(v.into_iter().map(|v| v.into()).collect()),
-            Value::Object(v) => Self::Object(v.into_iter().map(|(k, v)| (k, v.into())).collect()),
+            JsonValue::Null => Self::Null,
+            JsonValue::Bool(v) => Self::Bool(v),
+            JsonValue::Number(v) => Self::Number(v),
+            JsonValue::String(v) => Self::String(v),
+            JsonValue::Array(v) => Self::Array(v.into_iter().map(|v| v.into()).collect()),
+            JsonValue::Object(v) => Self::Object(v.into_iter().map(|(k, v)| (k, v.into())).collect()),
         }
+    }
+}
+
+impl JssSchema {
+    pub fn set_name<S>(&mut self, name: S)
+    where
+        S: Into<String>,
+    {
+        self.name = Some(name.into())
     }
 }
