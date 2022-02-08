@@ -1,21 +1,29 @@
+use std::fmt::{Debug, Display, Formatter};
+
+use indexmap::IndexMap;
+
+use json_value::{JsonMaybeObject, JsonValue, JsonValueCheck, JsonValueWrap, Number};
+
 mod parse_main;
 mod parse_type;
 mod traits;
 mod value;
 
-use indexmap::IndexMap;
-use json_value::{JsonMaybeObject, JsonValue, JsonValueCheck, JsonValueWrap, Number};
-use std::fmt::{Debug, Display, Formatter};
-
+/// The schema node
 pub struct JssSchema {
-    kind: JssKind,
-    name: Option<String>,
-    description: Option<String>,
-    typing: JssType,
-    properties: IndexMap<String, JssSchema>,
-    definition: IndexMap<String, JssSchema>,
-    annotation: IndexMap<String, JssValue>,
-    keywords: IndexMap<String, JssValue>,
+    /// The kind of this node
+    pub kind: JssKind,
+    /// The name of the node
+    pub name: Option<String>,
+    /// The documentations of the node
+    pub description: Option<String>,
+    /// type definition
+    pub typing: JssType,
+    ///
+    pub properties: IndexMap<String, JssSchema>,
+    pub definition: IndexMap<String, JssSchema>,
+    pub annotation: IndexMap<String, JssValue>,
+    pub keywords: IndexMap<String, JssValue>,
 }
 
 #[derive(Debug)]

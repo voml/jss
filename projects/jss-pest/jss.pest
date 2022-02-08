@@ -2,6 +2,7 @@ program = _{SOI ~ statement* ~ EOI}
 statement = _{
     SEPARATOR
   | EmptyLine{1,}
+  | DOCUMENTATION
   | schema_statement
   | property_statement
   | define_statement
@@ -13,13 +14,15 @@ schema_statement = {"schema" ~ SYMBOL ~ COLON ~ object}
 define_statement = {_define ~ SYMBOL ~ COLON ~ object}
 _define = _{"def"|"define"|"^"}
 /*====================================================================================================================*/
+/// .key = value
 property_statement = {_property ~ SYMBOL ~ COLON ~ object}
 _property = _{"property"|"properties"|"prop"|DOT}
 DOT       = _{"."}
 /*====================================================================================================================*/
 block = {"{" ~ (block_valid|SEPARATOR)* ~ "}"}
-block_valid = _{property_statement|attitude_statement}
+block_valid = _{property_statement|attitude_statement|DOCUMENTATION}
 /*====================================================================================================================*/
+/// key = value
 attitude_statement = {key ~ SET ~ data}
 key = {SYMBOL|STRING_INLINE}
 REQUIRED = @{"!"}
@@ -78,6 +81,7 @@ URL    = @{ASCII_ALPHA+ ~ "://" ~ (XID_CONTINUE|"_"|"-"|"/"|".")*}
 ///Gray
 COMMENT          = _{MultiLineComment|LineComment}
 WHITESPACE       = _{NEWLINE|SPACE_SEPARATOR|"\t"}
+DOCUMENTATION    = @{"///" ~ (!NEWLINE ~ ANY)*}
 LineComment      = @{"//" ~ (!NEWLINE ~ ANY)*}
 MultiLineComment = @{"/*" ~ (MultiLineComment | !"*/" ~ ANY)* ~ "*/"}
 

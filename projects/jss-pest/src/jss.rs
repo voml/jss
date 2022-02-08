@@ -43,6 +43,7 @@ pub enum Rule {
     URL,
     COMMENT,
     WHITESPACE,
+    DOCUMENTATION,
     LineComment,
     MultiLineComment,
     SEPARATOR,
@@ -69,7 +70,7 @@ impl ::pest::Parser<Rule> for JssParser {
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
                 pub fn statement(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
-                    self::SEPARATOR(state).or_else(|state| state.sequence(|state| self::EmptyLine(state).and_then(|state| super::hidden::skip(state)).and_then(|state| state.sequence(|state| state.optional(|state| self::EmptyLine(state).and_then(|state| state.repeat(|state| state.sequence(|state| super::hidden::skip(state).and_then(|state| self::EmptyLine(state)))))))))).or_else(|state| self::schema_statement(state)).or_else(|state| self::property_statement(state)).or_else(|state| self::define_statement(state))
+                    self::SEPARATOR(state).or_else(|state| state.sequence(|state| self::EmptyLine(state).and_then(|state| super::hidden::skip(state)).and_then(|state| state.sequence(|state| state.optional(|state| self::EmptyLine(state).and_then(|state| state.repeat(|state| state.sequence(|state| super::hidden::skip(state).and_then(|state| self::EmptyLine(state)))))))))).or_else(|state| self::DOCUMENTATION(state)).or_else(|state| self::schema_statement(state)).or_else(|state| self::property_statement(state)).or_else(|state| self::define_statement(state))
                 }
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
@@ -114,7 +115,7 @@ impl ::pest::Parser<Rule> for JssParser {
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
                 pub fn block_valid(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
-                    self::property_statement(state).or_else(|state| self::attitude_statement(state))
+                    self::property_statement(state).or_else(|state| self::attitude_statement(state)).or_else(|state| self::DOCUMENTATION(state))
                 }
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
@@ -263,6 +264,11 @@ impl ::pest::Parser<Rule> for JssParser {
                 }
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
+                pub fn DOCUMENTATION(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
+                    state.rule(Rule::DOCUMENTATION, |state| state.atomic(::pest::Atomicity::Atomic, |state| state.sequence(|state| state.match_string("///").and_then(|state| state.repeat(|state| state.sequence(|state| state.lookahead(false, |state| self::NEWLINE(state)).and_then(|state| self::ANY(state))))))))
+                }
+                #[inline]
+                #[allow(non_snake_case, unused_variables)]
                 pub fn LineComment(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
                     state.rule(Rule::LineComment, |state| state.atomic(::pest::Atomicity::Atomic, |state| state.sequence(|state| state.match_string("//").and_then(|state| state.repeat(|state| state.sequence(|state| state.lookahead(false, |state| self::NEWLINE(state)).and_then(|state| self::ANY(state))))))))
                 }
@@ -375,6 +381,7 @@ impl ::pest::Parser<Rule> for JssParser {
             Rule::URL => rules::URL(state),
             Rule::COMMENT => rules::COMMENT(state),
             Rule::WHITESPACE => rules::WHITESPACE(state),
+            Rule::DOCUMENTATION => rules::DOCUMENTATION(state),
             Rule::LineComment => rules::LineComment(state),
             Rule::MultiLineComment => rules::MultiLineComment(state),
             Rule::SEPARATOR => rules::SEPARATOR(state),

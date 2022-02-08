@@ -84,7 +84,7 @@ impl JssSchema {
 }
 
 impl JssSchema {
-    pub fn extend_properties(&mut self, key: &str, is_top: bool, value: &mut JsonValue, errors: Errors) {
+    fn extend_properties(&mut self, key: &str, is_top: bool, value: &mut JsonValue, errors: Errors) {
         if let Some(object) = value.extract_key_as_object(key) {
             for (key, value) in object {
                 match JssSchema::parse_value(key.to_owned(), value, errors) {
@@ -100,7 +100,7 @@ impl JssSchema {
         }
     }
 
-    pub fn extend_definition(&mut self, key: &str, value: &mut JsonValue, errors: Errors) {
+    fn extend_definition(&mut self, key: &str, value: &mut JsonValue, errors: Errors) {
         if let Some(object) = value.extract_key_as_object(key) {
             for (key, value) in object {
                 match JssSchema::parse_value(key.to_owned(), value, errors) {
