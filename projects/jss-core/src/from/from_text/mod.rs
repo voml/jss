@@ -2,7 +2,7 @@ use std::str::FromStr;
 
 use jss_pest::{JssParser, Pair, Parser, Rule};
 
-use crate::{JssError, JssSchema, Result};
+use crate::{JssError, JssSchema, JssValue, Result};
 
 impl FromStr for JssSchema {
     type Err = JssError;
@@ -37,6 +37,7 @@ impl ParseContext {
         let mut node = JssSchema::top();
         for pair in parsed {
             match pair.as_rule() {
+                Rule::EOI => continue,
                 Rule::schema_statement => self.parse_schema_statement(pair, &mut node)?,
                 _ => debug_cases!(pair),
             }
@@ -48,7 +49,7 @@ impl ParseContext {
         for pair in pairs.into_inner() {
             match pair.as_rule() {
                 Rule::SYMBOL => node.set_name(pair.as_str()),
-                Rule::object => self.parse_object(pair, node)?,
+                Rule::block => self.parse_block(pair, node)?,
                 _ => unreachable!(),
             }
         }
@@ -57,8 +58,8 @@ impl ParseContext {
     pub fn parse_attitude_statement(&mut self, pairs: Pair<Rule>, node: &mut JssSchema) -> Result<()> {
         let mut pairs = pairs.into_inner();
         let key = self.parse_key(pairs.next().unwrap())?;
-        let value = pairs.next().unwrap();
-
+        let value = self.parse_data(pairs.next().unwrap())?;
+        node.attribute.insert(key, value);
         Ok(())
     }
 }
@@ -67,33 +68,44 @@ impl ParseContext {
     pub fn parse_object(&mut self, pairs: Pair<Rule>, node: &mut JssSchema) -> Result<()> {
         for pair in pairs.into_inner() {
             match pair.as_rule() {
-                Rule::key => {
-                    let key = self.parse_key(pair)?;
-                }
-                Rule::block => {
-                    let block = self.parse_block(pair, node)?;
-                }
+                Rule::attitude_statement => self.parse_attitude_statement(pair, node)?,
                 _ => debug_cases!(pair),
             }
         }
         Ok(())
     }
-    pub fn parse_block(&mut self, pairs: Pair<Rule>, node: &mut JssSchema) -> Result<String> {
+    pub fn parse_block(&mut self, pairs: Pair<Rule>, node: &mut JssSchema) -> Result<()> {
         for pair in pairs.into_inner() {
             match pair.as_rule() {
-                Rule::attitude_statement => self.parse_attitude_statement(pair, node)?,
+                Rule::key => node.set_type(self.parse_key(pair)?),
+                Rule::object => self.parse_object(pair, node)?,
                 _ => debug_cases!(pair),
             }
         }
-        Err(JssError::unreachable())
+        Ok(())
     }
     pub fn parse_key(&mut self, pairs: Pair<Rule>) -> Result<String> {
+        let pair = pairs.into_inner().next().unwrap();
+        match pair.as_rule() {
+            Rule::SYMBOL => return Ok(pair.as_str().to_string()),
+            Rule::STRING_INLINE => return self.parse_string_inline(pair),
+            _ => debug_cases!(pair),
+        }
+    }
+    pub fn parse_data(&mut self, pairs: Pair<Rule>) -> Result<JssValue> {
+        let pair = pairs.into_inner().next().unwrap();
+        let value = match pair.as_rule() {
+            Rule::URL => JssValue::Url(pair.as_str().to_string()),
+            _ => debug_cases!(pair),
+        };
+        Ok(value)
+    }
+    pub fn parse_string_inline(&mut self, pairs: Pair<Rule>) -> Result<String> {
         for pair in pairs.into_inner() {
             match pair.as_rule() {
-                Rule::SYMBOL => return Ok(pair.as_str().to_string()),
                 _ => debug_cases!(pair),
             }
         }
-        Err(JssError::unreachable())
+        todo!()
     }
 }
