@@ -2,7 +2,7 @@ use std::str::FromStr;
 
 use jss_pest::{JssParser, Pair, Parser, Rule};
 
-use crate::{JssError, JssSchema, JssValue, Result};
+use crate::{JssError, JssSchema, JssType, JssValue, Result};
 
 impl FromStr for JssSchema {
     type Err = JssError;
@@ -39,6 +39,7 @@ impl ParseContext {
             match pair.as_rule() {
                 Rule::EOI => continue,
                 Rule::schema_statement => self.parse_schema_statement(pair, &mut node)?,
+                Rule::property_statement => self.parse_property_statement(pair, &mut node)?,
                 _ => debug_cases!(pair),
             }
         }
@@ -51,6 +52,14 @@ impl ParseContext {
                 Rule::SYMBOL => node.set_name(pair.as_str()),
                 Rule::block => self.parse_block(pair, node)?,
                 _ => unreachable!(),
+            }
+        }
+        Ok(())
+    }
+    pub fn parse_property_statement(&mut self, pairs: Pair<Rule>, node: &mut JssSchema) -> Result<()> {
+        for pair in pairs.into_inner() {
+            match pair.as_rule() {
+                _ => debug_cases!(pair),
             }
         }
         Ok(())
@@ -96,16 +105,30 @@ impl ParseContext {
         let pair = pairs.into_inner().next().unwrap();
         let value = match pair.as_rule() {
             Rule::URL => JssValue::Url(pair.as_str().to_string()),
+            Rule::array => self.parse_array(pair)?,
+            Rule::STRING_INLINE => JssValue::String(self.parse_string_inline(pair)?),
             _ => debug_cases!(pair),
         };
         Ok(value)
     }
-    pub fn parse_string_inline(&mut self, pairs: Pair<Rule>) -> Result<String> {
+    pub fn parse_array(&mut self, pairs: Pair<Rule>) -> Result<JssValue> {
+        let mut out = vec![];
         for pair in pairs.into_inner() {
             match pair.as_rule() {
+                Rule::data => out.push(self.parse_data(pair)?),
                 _ => debug_cases!(pair),
             }
         }
-        todo!()
+        return Ok(JssValue::Array(out));
+    }
+    pub fn parse_string_inline(&mut self, pairs: Pair<Rule>) -> Result<String> {
+        let mut out = String::with_capacity(pairs.as_str().len());
+        for pair in pairs.into_inner() {
+            match pair.as_rule() {
+                Rule::NS2 => out.push_str(pair.as_str()),
+                _ => debug_cases!(pair),
+            }
+        }
+        return Ok(out);
     }
 }
