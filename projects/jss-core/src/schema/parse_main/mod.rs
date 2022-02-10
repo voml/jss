@@ -123,6 +123,6 @@ impl Default for JssStringType {
 
 impl From<JssStringType> for JssType {
     fn from(v: JssStringType) -> Self {
-        Self::String(Box::new(v))
+        Self::Complex(Box::new(v))
     }
 }

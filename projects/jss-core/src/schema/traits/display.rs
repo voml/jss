@@ -105,18 +105,20 @@ impl Display for JssType {
             Self::Nothing => {
                 write!(f, ": nothing")
             }
-            Self::String(_) => {
+            Self::Complex(_) => {
                 write!(f, ": string")
             }
             Self::Number => {
                 write!(f, ": number")
             }
+            JssType::Integer => write!(f, ": integer"),
             Self::Object => {
                 write!(f, ": object")
             }
             Self::Reference(v) => {
                 write!(f, ": {:?}", v)
             }
+            JssType::String => write!(f, ": string"),
         }
     }
 }

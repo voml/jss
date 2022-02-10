@@ -1,4 +1,5 @@
 use std::str::FromStr;
+use json_value::Number;
 
 use jss_pest::{JssParser, Pair, Parser, Rule};
 
@@ -40,9 +41,8 @@ impl ParseContext {
                 Rule::EOI => continue,
                 Rule::schema_statement => self.parse_schema_statement(pair, &mut node)?,
                 Rule::property_statement => {
-                    let mut node = JssSchema::property();
                     let property = self.parse_property_statement(pair)?;
-                    let name = property.get_name();
+                    let name = property.get_name().to_string();
                     node.insert_property(name, property);
                 }
                 _ => debug_cases!(pair),
@@ -56,7 +56,7 @@ impl ParseContext {
             match pair.as_rule() {
                 Rule::SYMBOL => node.set_name(pair.as_str()),
                 Rule::block => self.parse_block(pair, node)?,
-                _ => unreachable!(),
+                _ => debug_cases!(pair),
             }
         }
         Ok(())
@@ -65,6 +65,8 @@ impl ParseContext {
         let mut out = JssSchema::property();
         for pair in pairs.into_inner() {
             match pair.as_rule() {
+                Rule::SYMBOL => out.set_name(pair.as_str()),
+                Rule::block => self.parse_block(pair, &mut out)?,
                 _ => debug_cases!(pair),
             }
         }
@@ -113,6 +115,7 @@ impl ParseContext {
             Rule::URL => JssValue::Url(pair.as_str().to_string()),
             Rule::array => self.parse_array(pair)?,
             Rule::STRING_INLINE => JssValue::String(self.parse_string_inline(pair)?),
+            Rule::Number => JssValue::Number(Number::from())
             _ => debug_cases!(pair),
         };
         Ok(value)

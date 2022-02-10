@@ -39,10 +39,13 @@ impl Debug for JssType {
             Self::Undefined => f.write_str("Undefined"),
             Self::Anything => f.write_str("Anything"),
             Self::Nothing => f.write_str("Nothing"),
-            Self::String(v) => Debug::fmt(v, f),
+            JssType::String => f.write_str("String"),
+
+            Self::Integer => f.write_str("Integer"),
             Self::Number => f.write_str("Number"),
             Self::Object => f.write_str("Object"),
             Self::Reference(v) => Debug::fmt(v, f),
+            Self::Complex(v) => Debug::fmt(v, f),
         }
     }
 }
