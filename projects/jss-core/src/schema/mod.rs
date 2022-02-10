@@ -20,7 +20,7 @@ pub struct JssSchema {
     /// type definition
     typing: JssType,
     /// .key = value
-    pub property: IndexMap<String, JssSchema>,
+    property: IndexMap<String, JssSchema>,
     /// Top level node only
     /// ^key = value
     pub definition: IndexMap<String, JssSchema>,
@@ -52,6 +52,14 @@ impl JssSchema {
         S: Into<JssType>,
     {
         self.typing = typing.into()
+    }
+
+    pub fn insert_property<K, V>(&mut self, key: K, value: V) -> Option<JssSchema>
+    where
+        K: Into<String>,
+        V: Into<JssSchema>,
+    {
+        self.property.insert(key.into(), value.into())
     }
 }
 

@@ -39,7 +39,12 @@ impl ParseContext {
             match pair.as_rule() {
                 Rule::EOI => continue,
                 Rule::schema_statement => self.parse_schema_statement(pair, &mut node)?,
-                Rule::property_statement => self.parse_property_statement(pair, &mut node)?,
+                Rule::property_statement => {
+                    let mut node = JssSchema::property();
+                    let property = self.parse_property_statement(pair)?;
+                    let name = property.get_name();
+                    node.insert_property(name, property);
+                }
                 _ => debug_cases!(pair),
             }
         }
@@ -56,13 +61,14 @@ impl ParseContext {
         }
         Ok(())
     }
-    pub fn parse_property_statement(&mut self, pairs: Pair<Rule>, node: &mut JssSchema) -> Result<()> {
+    pub fn parse_property_statement(&mut self, pairs: Pair<Rule>) -> Result<JssSchema> {
+        let mut out = JssSchema::property();
         for pair in pairs.into_inner() {
             match pair.as_rule() {
                 _ => debug_cases!(pair),
             }
         }
-        Ok(())
+        Ok(out)
     }
     pub fn parse_attitude_statement(&mut self, pairs: Pair<Rule>, node: &mut JssSchema) -> Result<()> {
         let mut pairs = pairs.into_inner();
