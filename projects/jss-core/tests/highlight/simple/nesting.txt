@@ -1,0 +1,73 @@
+JssScheme {
+    type: Object,
+    definitions: {},
+    keywords: {},
+    attributes: {
+        "$schema": https://json-schema.org/draft/2020-12/schema,
+        "$id": https://example.com/product.schema.json,
+        "required": [
+            "productId",
+            "productName",
+            "price",
+        ],
+    },
+    properties: {
+        "productId": JssProperty {
+            type: Integer,
+            keywords: {},
+            attributes: {},
+            properties: {},
+        },
+        "productName": JssProperty {
+            type: Number,
+            keywords: {},
+            attributes: {
+                "exclusiveMinimum": 0,
+            },
+            properties: {},
+        },
+        "tags": JssProperty {
+            type: Array,
+            keywords: {},
+            attributes: {
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                    "type": "string",
+                },
+            },
+            properties: {},
+        },
+        "dimensions": JssProperty {
+            type: Object,
+            keywords: {},
+            attributes: {
+                "required": [
+                    "length",
+                    "width",
+                    "height",
+                ],
+            },
+            properties: {
+                "length": JssProperty {
+                    type: Number,
+                    keywords: {},
+                    attributes: {},
+                    properties: {},
+                },
+                "width": JssProperty {
+                    type: Number,
+                    keywords: {},
+                    attributes: {},
+                    properties: {},
+                },
+                "height": JssProperty {
+                    type: Number,
+                    keywords: {},
+                    attributes: {},
+                    properties: {},
+                },
+            },
+        },
+    },
+}

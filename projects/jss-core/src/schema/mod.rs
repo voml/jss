@@ -63,24 +63,6 @@ impl JssSchema {
     }
 }
 
-impl From<String> for JssType {
-    fn from(s: String) -> Self {
-        JssType::from(s.as_str())
-    }
-}
-
-impl From<&str> for JssType {
-    fn from(s: &str) -> Self {
-        match s {
-            "object" => JssType::Object,
-            "integer" => JssType::Integer,
-            "number" => JssType::Number,
-            "string" => JssType::String,
-            _ => unimplemented!("{:?}", s),
-        }
-    }
-}
-
 #[derive(Debug)]
 pub enum JssKind {
     Scheme,
@@ -97,6 +79,7 @@ pub enum JssType {
     String,
     Integer,
     Number,
+    Array,
     Object,
     Reference(String),
     Complex(Box<JssStringType>),
@@ -117,7 +100,7 @@ pub enum JssValue {
     Null,
 
     /// Represents a boolean.
-    Bool(bool),
+    Boolean(bool),
 
     /// Represents a JSON number, whether integer or floating point.
     Number(Number),

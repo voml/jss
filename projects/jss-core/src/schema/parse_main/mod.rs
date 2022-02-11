@@ -6,7 +6,7 @@ impl From<JsonValue> for JssValue {
     fn from(v: JsonValue) -> Self {
         match v {
             JsonValue::Null => Self::Null,
-            JsonValue::Bool(v) => Self::Bool(v),
+            JsonValue::Bool(v) => Self::Boolean(v),
             JsonValue::Number(v) => Self::Number(v),
             JsonValue::String(v) => Self::String(v),
             JsonValue::Array(v) => Self::Array(v.into_iter().map(|v| v.into()).collect()),
