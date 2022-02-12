@@ -1,5 +1,4 @@
-use super::*;
-use crate::{Errors, JssError, Result};
+use crate::{schema::*, Errors, JssError, Result};
 
 impl JssType {
     pub fn parse_value(typing: JsonValue, value: &mut JsonValue, errors: Errors) -> Result<Self> {

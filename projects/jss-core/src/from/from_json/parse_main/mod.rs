@@ -1,6 +1,6 @@
-use crate::{Errors, JssError, Result};
-
 use super::*;
+use crate::{schema::JssStringType, JssKind, JssSchema, JssType, JssValue};
+use json_value::JsonMaybeObject;
 
 impl From<JsonValue> for JssValue {
     fn from(v: JsonValue) -> Self {
@@ -92,7 +92,7 @@ impl JssSchema {
                         if is_top {
                             o.kind = JssKind::PropertyTop
                         }
-                        self.property.insert(key, o);
+                        self.insert_property(key, o)
                     }
                     Err(e) => errors.push(e),
                 }
@@ -112,17 +112,5 @@ impl JssSchema {
                 }
             }
         }
-    }
-}
-
-impl Default for JssStringType {
-    fn default() -> Self {
-        Self { pattern: JssValue::string("") }
-    }
-}
-
-impl From<JssStringType> for JssType {
-    fn from(v: JssStringType) -> Self {
-        Self::Complex(Box::new(v))
     }
 }

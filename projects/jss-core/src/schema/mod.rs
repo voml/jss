@@ -4,9 +4,8 @@ use indexmap::IndexMap;
 
 use json_value::{JsonMaybeObject, JsonValue, JsonValueCheck, JsonValueWrap, Number};
 
-mod parse_main;
-mod parse_type;
 mod traits;
+mod typing;
 mod value;
 
 /// The schema node
