@@ -48,4 +48,12 @@ impl JssSchema {
     pub fn top() -> Self {
         Self { kind: JssKind::Scheme, typing: JssType::Undefined, ..Default::default() }
     }
+    #[inline]
+    pub fn is_anything(&self) -> bool {
+        matches!(self.typing, JssType::Anything)
+    }
+    #[inline]
+    pub fn is_noting(&self) -> bool {
+        matches!(self.typing, JssType::Nothing)
+    }
 }

@@ -1,6 +1,6 @@
 use super::*;
-use crate::{schema::JssStringType, JssKind, JssSchema, JssType, JssValue};
-use json_value::JsonMaybeObject;
+use crate::{JssKind, JssSchema, JssValue};
+use json_value::{JsonMaybeObject, JsonValueCheck, JsonValueWrap};
 
 impl From<JsonValue> for JssValue {
     fn from(v: JsonValue) -> Self {
@@ -56,7 +56,7 @@ impl JssSchema {
     pub fn parse_value(name: String, value: JsonValue, errors: Errors) -> Result<Self> {
         let mut value = value;
         let mut jss = Self::default();
-        jss.name = Some(name);
+        jss.set_name(name);
         jss.parse_steps(false, &mut value, errors);
         jss.consume_rest(value, errors);
         Ok(jss)
@@ -92,7 +92,7 @@ impl JssSchema {
                         if is_top {
                             o.kind = JssKind::PropertyTop
                         }
-                        self.insert_property(key, o)
+                        self.insert_property(key, o);
                     }
                     Err(e) => errors.push(e),
                 }

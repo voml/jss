@@ -1,4 +1,5 @@
 use crate::{schema::*, Errors, JssError, Result};
+use json_value::{JsonMaybeObject, JsonValue, JsonValueWrap};
 
 impl JssType {
     pub fn parse_value(typing: JsonValue, value: &mut JsonValue, errors: Errors) -> Result<Self> {
@@ -24,7 +25,7 @@ impl JssType {
     fn parse_string(typing: &str, value: &mut JsonValue, errors: Errors) -> Result<Self> {
         let out = match typing {
             "string" => {
-                let mut t = JssStringType::default();
+                let mut t = JssComplexType::default();
                 t.parse(value, errors);
                 Self::Complex(Box::new(t))
             }
@@ -38,7 +39,7 @@ impl JssType {
     }
 }
 
-impl JssStringType {
+impl JssComplexType {
     pub fn parse(&mut self, value: &mut JsonValue, errors: Errors) {
         self.parse_pattern("pattern", value, errors)
     }
@@ -61,7 +62,7 @@ impl JssSchema {
     }
     fn for_type(&mut self, typing: JsonValue, value: &mut JsonValue, errors: Errors) {
         match JssType::parse_value(typing, value, errors) {
-            Ok(t) => self.typing = t,
+            Ok(t) => self.set_type(t),
             Err(e) => errors.push(e),
         }
     }
@@ -72,7 +73,7 @@ impl JssSchema {
                 return;
             }
             Some(s) => match JssType::parse_ref(s) {
-                Ok(o) => self.typing = o,
+                Ok(o) => self.set_type(o),
                 Err(e) => errors.push(e),
             },
         }
