@@ -2,6 +2,7 @@
 
 pub use self::{
     errors::{Errors, JssError, JssErrorKind, Result},
+    from::parse_json,
     schema::{JssKind, JssSchema, JssType, JssValue},
 };
 

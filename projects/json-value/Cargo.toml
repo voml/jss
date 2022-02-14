@@ -2,8 +2,8 @@
 name = "json-value"
 version = "0.3.1"
 authors = ["Aster <192607617@qq.com>"]
-description = "Helper method to get the josn value"
-repository = "https://github.com/notedge/panduck/tree/master/projects/lipsum-cn"
+description = "Helper method to get the json value"
+repository = "https://github.com/voml/jss-rs"
 documentation = "https://docs.rs/json-value"
 readme = "../../readme.md"
 license = "MPL-2.0"
@@ -14,7 +14,9 @@ serde = "1.0.139"
 
 [dependencies.serde_json]
 version = "1.0.74"
-featrues = ["preserve_order"]
+features = [
+    "preserve_order",
+]
 
 [features]
 default = []

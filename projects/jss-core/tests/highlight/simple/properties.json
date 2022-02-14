@@ -1,14 +1,17 @@
 {
+    "title": "Product",
+    "type": "object",
+    "description": "A product in the catalog",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://example.com/product.schema.json",
-    "title": "Product",
-    "description": "A product from Acme's catalog",
-    "type": "object",
+    "required": [
+        "productId"
+    ],
     "properties": {
         "productId": {
+            "type": "integer",
             "description": "The unique identifier for a product",
-            "type": "integer"
+            "properties": {}
         }
-    },
-    "required": ["productId"]
+    }
 }
