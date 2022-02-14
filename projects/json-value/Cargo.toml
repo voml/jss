@@ -1,6 +1,6 @@
 [package]
 name = "json-value"
-version = "0.3.0"
+version = "0.3.1"
 authors = ["Aster <192607617@qq.com>"]
 description = "Helper method to get the josn value"
 repository = "https://github.com/notedge/panduck/tree/master/projects/lipsum-cn"
@@ -10,7 +10,11 @@ license = "MPL-2.0"
 edition = "2021"
 
 [dependencies]
-serde_json = {version = "1.0.74", optional = true}
+serde = "1.0.139"
+
+[dependencies.serde_json]
+version = "1.0.74"
+featrues = ["preserve_order"]
 
 [features]
-default = ["serde_json", "serde_json/preserve_order"]
+default = []

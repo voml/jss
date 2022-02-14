@@ -12,6 +12,7 @@ edition = "2021"
 [dependencies]
 jsonschema = "0.16.0"
 #serde_json = "1.0.82"
+itertools = "0.10.3"
 indexmap = "1.9.1"
 json-value = {version = "0.3.0", path = "../json-value"}
 text-utils = "0.4.3"

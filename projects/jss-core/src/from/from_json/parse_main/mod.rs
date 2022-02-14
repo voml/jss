@@ -73,12 +73,7 @@ impl JssSchema {
             Some(s) => s,
         };
         for (k, v) in object {
-            if k.starts_with("$") {
-                self.keywords.insert(k, v.into())
-            }
-            else {
-                self.attribute.insert(k, v.into())
-            };
+            self.insert_attribute(k, v);
         }
     }
 }

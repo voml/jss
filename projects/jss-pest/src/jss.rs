@@ -282,7 +282,7 @@ impl ::pest::Parser<Rule> for JssParser {
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
                 pub fn LineComment(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
-                    state.rule(Rule::LineComment, |state| state.atomic(::pest::Atomicity::Atomic, |state| state.sequence(|state| state.match_string("//").and_then(|state| state.repeat(|state| state.sequence(|state| state.lookahead(false, |state| self::NEWLINE(state)).and_then(|state| self::ANY(state))))))))
+                    state.rule(Rule::LineComment, |state| state.atomic(::pest::Atomicity::Atomic, |state| state.sequence(|state| state.lookahead(false, |state| state.match_string("///")).and_then(|state| state.match_string("//")).and_then(|state| state.repeat(|state| state.sequence(|state| state.lookahead(false, |state| self::NEWLINE(state)).and_then(|state| self::ANY(state))))))))
                 }
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]

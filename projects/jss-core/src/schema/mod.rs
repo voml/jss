@@ -1,6 +1,6 @@
 use std::fmt::{Debug, Display, Formatter};
 
-use indexmap::IndexMap;
+use indexmap::{map::Iter, IndexMap};
 
 use json_value::Number;
 
@@ -9,13 +9,14 @@ mod typing;
 mod value;
 
 /// The schema node
+#[derive(Clone)]
 pub struct JssSchema {
     /// The kind of this node
     pub kind: JssKind,
     /// The name of the node
     name: Option<String>,
     /// The documentations of the node
-    pub description: Option<String>,
+    description: String,
     /// type definition
     typing: JssType,
     /// .key = value
@@ -24,8 +25,9 @@ pub struct JssSchema {
     /// ^key = value
     pub definition: IndexMap<String, JssSchema>,
     /// key = value
-    pub attribute: IndexMap<String, JssValue>,
-    pub keywords: IndexMap<String, JssValue>,
+    attribute: IndexMap<String, JssValue>,
+    // $key = value
+    // keywords: IndexMap<String, JssValue>,
 }
 
 impl JssSchema {
@@ -53,6 +55,23 @@ impl JssSchema {
         self.typing = typing.into()
     }
 
+    pub fn has_description(&self) -> bool {
+        !self.description.is_empty()
+    }
+
+    pub fn get_description(&self) -> &str {
+        &self.description
+    }
+    pub fn set_description<S>(&mut self, description: S)
+    where
+        S: Into<String>,
+    {
+        self.description = description.into()
+    }
+
+    pub fn properties(&self) -> Iter<'_, String, JssSchema> {
+        self.property.iter()
+    }
     pub fn insert_property<K, V>(&mut self, key: K, value: V) -> Option<JssSchema>
     where
         K: Into<String>,
@@ -60,9 +79,20 @@ impl JssSchema {
     {
         self.property.insert(key.into(), value.into())
     }
+
+    pub fn attributes(&self) -> Iter<'_, String, JssValue> {
+        self.attribute.iter()
+    }
+    pub fn insert_attribute<K, V>(&mut self, key: K, value: V) -> Option<JssValue>
+    where
+        K: Into<String>,
+        V: Into<JssValue>,
+    {
+        self.attribute.insert(key.into(), value.into())
+    }
 }
 
-#[derive(Debug)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub enum JssKind {
     Scheme,
     Property,
@@ -70,7 +100,7 @@ pub enum JssKind {
     Definition,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum JssType {
     Undefined,
     Anything,
@@ -84,7 +114,7 @@ pub enum JssType {
     Complex(Box<JssComplexType>),
 }
 
-#[derive(PartialEq)]
+#[derive(Clone, PartialEq)]
 pub struct JssComplexType {
     /// Jss String
     pub pattern: JssValue,
