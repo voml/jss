@@ -51,8 +51,13 @@ impl JssSchema {
             None => f.write_char('_')?,
             Some(s) => f.write_str(s)?,
         }
-        if self.typing != JssType::Undefined {
-            write!(f, ": {}", self.typing)?
+        match &self.typing {
+            JssType::Undefined => {}
+            JssType::Anything => {}
+            JssType::Nothing => {}
+            JssType::Reference(v) => write!(f, ": \"{}\"", v)?,
+            JssType::Complex(v) => write!(f, ": \"{}\"", v)?,
+            _ => write!(f, ": {}", self.typing)?,
         }
         f.write_str(" {\n")?;
         Ok(())

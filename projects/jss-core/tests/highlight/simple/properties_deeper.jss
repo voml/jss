@@ -1,8 +1,7 @@
 /// A product from Acme's catalog
-schema _: object {
+schema Product: object {
     $schema: "https://json-schema.org/draft/2020-12/schema"
     $id: "https://example.com/product.schema.json"
-    title: "Product"
     required: [
         "productId",
         "productName",

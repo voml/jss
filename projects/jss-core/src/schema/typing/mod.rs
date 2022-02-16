@@ -14,7 +14,7 @@ impl From<&str> for JssType {
             "number" => JssType::Number,
             "string" => JssType::String,
             "array" => JssType::Array,
-            _ => unimplemented!("{:?}", s),
+            _ => JssType::Reference(s.to_string()),
         }
     }
 }

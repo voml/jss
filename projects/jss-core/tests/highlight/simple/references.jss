@@ -1,59 +1,46 @@
-{
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://example.com/product.schema.json",
-    "title": "Product",
-    "description": "A product from Acme's catalog",
-    "type": "object",
-    "properties": {
-        "productId": {
-            "description": "The unique identifier for a product",
-            "type": "integer"
-        },
-        "productName": {
-            "description": "Name of the product",
-            "type": "string"
-        },
-        "price": {
-            "description": "The price of the product",
-            "type": "number",
-            "exclusiveMinimum": 0
-        },
-        "tags": {
-            "description": "Tags for the product",
-            "type": "array",
-            "items": {
-                "type": "string"
-            },
-            "minItems": 1,
-            "uniqueItems": true
-        },
-        "dimensions": {
-            "type": "object",
-            "properties": {
-                "length": {
-                    "type": "number"
-                },
-                "width": {
-                    "type": "number"
-                },
-                "height": {
-                    "type": "number"
-                }
-            },
-            "required": [
-                "length",
-                "width",
-                "height"
-            ]
-        },
-        "warehouseLocation": {
-            "description": "Coordinates of the warehouse where the product is located.",
-            "$ref": "https://example.com/geographical-location.schema.json"
-        }
-    },
-    "required": [
+/// A product from Acme's catalog
+schema Product: object {
+    $schema: "https://json-schema.org/draft/2020-12/schema"
+    $id: "https://example.com/product.schema.json"
+    required: [
         "productId",
         "productName",
-        "price"
+        "price",
     ]
+}
+/// The unique identifier for a product
+property productId: integer {
+}
+
+/// Name of the product
+property productName: string {
+}
+
+/// The price of the product
+property price: number {
+    exclusiveMinimum: 0
+}
+
+/// Tags for the product
+property tags: array {
+    minItems: 1
+    uniqueItems: true
+    items: {
+        "type": "string",
+    }
+}
+
+property dimensions: object {
+    .length: number
+    .width: number
+    .height: number
+    required: [
+        "length",
+        "width",
+        "height",
+    ]
+}
+
+/// Coordinates of the warehouse where the product is located.
+property warehouseLocation: "https://example.com/geographical-location.schema.json" {
 }

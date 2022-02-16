@@ -1,0 +1,77 @@
+JssScheme {
+    type: Object,
+    definitions: {},
+    attributes: {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://example.com/product.schema.json",
+        "required": [
+            "productId",
+            "productName",
+            "price",
+        ],
+    },
+    properties: {
+        "productId": JssProperty {
+            type: Integer,
+            attributes: {},
+            properties: {},
+        },
+        "productName": JssProperty {
+            type: String,
+            attributes: {},
+            properties: {},
+        },
+        "price": JssProperty {
+            type: Number,
+            attributes: {
+                "exclusiveMinimum": 0,
+            },
+            properties: {},
+        },
+        "tags": JssProperty {
+            type: Array,
+            attributes: {
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                    "type": "string",
+                },
+            },
+            properties: {},
+        },
+        "dimensions": JssProperty {
+            type: Object,
+            attributes: {
+                "required": [
+                    "length",
+                    "width",
+                    "height",
+                ],
+            },
+            properties: {
+                "length": JssProperty {
+                    type: Number,
+                    attributes: {},
+                    properties: {},
+                },
+                "width": JssProperty {
+                    type: Number,
+                    attributes: {},
+                    properties: {},
+                },
+                "height": JssProperty {
+                    type: Number,
+                    attributes: {},
+                    properties: {},
+                },
+            },
+        },
+        "warehouseLocation": JssProperty {
+            type: Reference(
+                "https://example.com/geographical-location.schema.json",
+            ),
+            attributes: {},
+            properties: {},
+        },
+    },
+}
