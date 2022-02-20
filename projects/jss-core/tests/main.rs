@@ -1,3 +1,4 @@
+mod from_json;
 mod highlight;
 
 #[test]

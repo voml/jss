@@ -47,11 +47,3 @@ fn test_references() {
     let json = include_str!("simple/references.json");
     check_jss(text, target, json).unwrap();
 }
-
-#[test]
-fn test() {
-    let json = include_str!("simple/references.json");
-    jss_core::parse_json(json).unwrap();
-    let jss = JssSchema::parse_json_schema(jss_core::parse_json(json).unwrap()).unwrap();
-    println!("{}", jss)
-}
