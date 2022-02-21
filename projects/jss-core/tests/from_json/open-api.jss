@@ -1,3 +1,5 @@
+/// The description of OpenAPI v3.1.x documents without schema validation
+/// as defined by https://spec.openapis.org/oas/v3.1.0
 schema _: object {
     $id: "https://spec.openapis.org/oas/3.0/schema/2021-09-28"
     $schema: "http://json-schema.org/draft-04/schema#"
@@ -11,6 +13,7 @@ schema _: object {
         "paths",
     ]
 }
+
 define Reference: object {
     patternProperties: {
         "^\\$ref$": {
@@ -32,31 +35,14 @@ define Info: object {
     patternProperties: {
         "^x-": {},
     }
-    .title: string {
-    }
-
-
-    .description: string {
-    }
-
-
+    .title: string;
+    .description: string;
     .termsOfService: string {
         format: "uri-reference"
     }
-
-
-    .contact: "#/definitions/Contact" {
-    }
-
-
-    .license: "#/definitions/License" {
-    }
-
-
-    .version: string {
-    }
-
-
+    .contact: "#/definitions/Contact";
+    .license: "#/definitions/License";
+    .version: string;
 }
 
 define Contact: object {
@@ -65,6 +51,7 @@ define Contact: object {
         "^x-": {},
     }
     .name: string {
+        minLength: 1
     }
 
 
@@ -827,7 +814,7 @@ define PathItem: object {
         },
         "^x-": {},
     }
-    .$ref: string {
+    ."$ref": string {
     }
 
 

@@ -10,7 +10,6 @@ license = "MPL-2.0"
 edition = "2021"
 
 [dependencies]
-jsonschema = "0.16.0"
 itertools = "0.10.3"
 indexmap = "1.9.1"
 json-value = { version = "0.3.1", path = "../json-value" }
@@ -21,9 +20,20 @@ rand = { version = "0.8.4", features = ["small_rng"] }
 # wasm
 getrandom = { version = "0.2.7", optional = true }
 js-sys = { version = "0.3.58", optional = true }
-serde-json-wasm = { version = "0.4.1", optional = true }
+serde-wasm-bindgen = { version = "0.4.3", optional = true }
 wasm-bindgen = { version = "0.2.81", optional = true }
+
+[dependencies.jsonschema]
+version = "0.16.0"
+default-features = false
+features = ["draft202012"]
 
 [features]
 default = []
-wasm = ["getrandom", "getrandom/js", "js-sys", "serde-json-wasm"]
+wasm = [
+    "getrandom",
+    "getrandom/js",
+    "js-sys",
+    "serde-wasm-bindgen",
+    "wasm-bindgen"
+]

@@ -12,41 +12,35 @@ pub struct Jss {
     internal: JssSchema,
 }
 
-// #[wasm_bindgen]
+#[wasm_bindgen]
 impl Jss {
     /// Create a new JSS instance.
-    // #[wasm_bindgen(constructor)]
+    #[wasm_bindgen(constructor)]
     pub fn from_string(jss: &str) -> Result<Self, JsError> {
-        match JssSchema::from_str(jss) {
-            Ok(o) => Ok(Self { internal: o }),
-            Err(e) => Err(JsError::new(&e.to_string())),
-        }
+        let jss = JssSchema::from_str(jss)?;
+        Ok(Self { internal: jss })
     }
 
     /// Get the JSS instance.
-    pub fn from_json_schema(object: JsValue) -> Self {
-        let value: Value = match from_value(object) {
-            Ok(o) => Ok(o),
-            Err(e) => Err(JsError::new(&e.to_string())),
-        }?;
-        let jss = match JssSchema::try_from(value) {
-            Ok(o) => Ok(o),
-            Err(e) => Err(JsError::new(&e.to_string())),
-        }?;
-        Self { internal: jss }
+    pub fn from_json_schema(object: JsValue) -> Result<Self, JsError> {
+        let jss = JssSchema::try_from(object)?;
+        Ok(Self { internal: jss })
     }
 
     /// Get the JSS instance.
-    pub fn validate(&self, json: &JsValue) -> Result<String, JsError> {
-        let value: Value = match from_value(object) {
-            Ok(o) => Ok(o),
-            Err(e) => Err(JsError::new(&e.to_string())),
-        }?;
-        self.internal.validate(&value)
+    pub fn validate(&self, object: JsValue) -> Result<Vec<JsError>, JsError> {
+        let value: Value = from_value(object)?;
+        Ok(self.internal.validate(&value))
+    }
+
+    /// Get the JSS instance.
+    pub fn is_valid(&self, object: JsValue) -> Result<bool, JsError> {
+        let value: Value = from_value(object)?;
+        Ok(self.internal.is_valid(&value))
     }
 
     /// Get random schema
-    pub fn random(&self) -> JsValue {
-        JsValue::from_str("test")
+    pub fn mock(&self) -> JsValue {
+        unimplemented!("random")
     }
 }

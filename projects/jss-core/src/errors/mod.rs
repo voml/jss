@@ -7,6 +7,8 @@ mod from_pest;
 mod from_serde_json;
 mod from_std;
 mod from_validate;
+#[cfg(feature = "wasm")]
+mod from_wasm;
 
 /// All result about jss
 pub type Result<T, E = JssError> = std::result::Result<T, E>;

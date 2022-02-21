@@ -9,21 +9,29 @@ Conversion tool by rust, inspired by [pandoc]().
 
 #### From (Text/Binary)
 
-- [x] Common Markdown
-- [x] Github Favored Markdown
-- [x] Pandoc Markdown (json)
-- [x] HTML
-- [x] Jupyter (ipynb)
-- [x] Wiki
-- [ ] Org-mode
-- [ ] reStructuredText (rst)
-- [ ] Rich Text Format (rtf)
-- [ ] Office Word (docx)
-- [ ] Office Excel (xls, xlsx, xlsm, xlsb, xla, xlam)
-- [x] CSV/TSV
-- [ ] Open Document Spread Sheets(ods)
-- [ ] TeX
-- [ ] BibTeX
+```jss
+/// The description of OpenAPI v3.1.x documents without schema validation 
+/// as defined by https://spec.openapis.org/oas/v3.1.0
+schema _: object {
+    $id: "https://spec.openapis.org/oas/3.0/schema/2021-09-28"
+    $schema: "http://json-schema.org/draft-04/schema#"
+    additionalProperties: false
+    patternProperties: {
+        "^x-": {},
+    }
+    required: [
+        "openapi",
+        "info",
+        "paths",
+    ]
+}
+```
+
+```json
+
+```
+
+
 
 #### Into (Rust + Text)
 
