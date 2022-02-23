@@ -5,7 +5,6 @@ schema Product: object {
     required: ["productId"]
 }
 
-
 /// The unique identifier for a product
 properties productId: integer;
 

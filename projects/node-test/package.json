@@ -1,21 +1,16 @@
 {
-    "name": "jss-wasm",
-    "collaborators": [
-        "Aster <192607617@qq.com>"
-    ],
-    "description": "Json Schema Swagger Wasm",
-    "version": "0.1.0",
-    "license": "MPL-2.0",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/voml/jss-rs"
-    },
-    "main": "src/index.js",
+    "name": "nodejs",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
     "type": "module",
     "scripts": {
-        "p": "npm publish"
+        "test": "echo \"Error: no test specified\" && exit 1"
     },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
     "dependencies": {
-        "jss-wasmbind": "file:../../../jss-wasm/pkg"
+        "jss-wasmbind": "0.2.2"
     }
 }

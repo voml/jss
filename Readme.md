@@ -1,7 +1,7 @@
-Panduck document conversion tool
-================================
+Json Schema Simplified
+======================
 
-Conversion tool by rust, inspired by [pandoc]().
+A better way to write schemas
 
 ## Formats
 
@@ -27,24 +27,10 @@ schema _: object {
 }
 ```
 
+
 ```json
 
 ```
-
-
-
-#### Into (Rust + Text)
-
-- [x] HTML
-- [x] yew (+html_vdom)
-- [x] sycamore (+html_dom)
-- [ ] pdf
-- [ ] ebook
-- [ ] zola
-
-### Highlights
-
-- Text(txt)
 
 
 

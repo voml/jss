@@ -2,7 +2,7 @@
     "private": true,
     "scripts": {
         "p": "cd pkg && npm publish",
-        "b" : "wasm-pack build --target nodejs",
+        "b" : "wasm-pack build --target nodejs --release",
         "u": "wee b && wee p"
     }
 }

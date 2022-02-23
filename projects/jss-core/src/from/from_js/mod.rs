@@ -1,6 +1,6 @@
 use crate::JssSchema;
 use json_value::JsonValue;
-use serde_wasm_bindgen::from_value;
+use serde_wasm_bindgen::{from_value, to_value};
 use wasm_bindgen::{JsError, JsValue};
 
 impl TryFrom<JsValue> for JssSchema {
@@ -25,5 +25,9 @@ impl JssSchema {
             Err(e) => return vec![JsValue::from(JsError::from(e))],
         };
         return self.validate(&value).into_iter().map(|e| JsValue::from(JsError::from(e))).collect();
+    }
+    pub fn to_json_schema(&self) -> JsValue {
+        let json = JsonValue::from(self);
+        to_value(&json).unwrap()
     }
 }
