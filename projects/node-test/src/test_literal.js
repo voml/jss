@@ -1,6 +1,6 @@
-import wasm from "jss-wasmbind";
+import { jss } from "jss-wasmbind";
 
-const schema = wasm.jss`
+const schema = jss`
 /// A product in the catalog
 schema Product: object {
     $schema: https://json-schema.org/draft/2020-12/schema

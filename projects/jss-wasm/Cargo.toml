@@ -1,7 +1,7 @@
 [package]
 publish = false
 name = "jss-wasmbind"
-version = "0.2.2"
+version = "0.2.4"
 authors = ["Aster <192607617@qq.com>"]
 description = "Json Simplified Schema Wasm Interface"
 repository = "https://github.com/voml/jss-rs"

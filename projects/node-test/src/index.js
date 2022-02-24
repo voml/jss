@@ -1,7 +1,6 @@
-import wasm from "jss-wasmbind";
+import { Schema } from "jss-wasmbind";
 
-
-const schema = new wasm.Schema(`
+const schema = new Schema(`
 /// A product in the catalog
 schema Product: object {
     $schema: https://json-schema.org/draft/2020-12/schema
@@ -29,3 +28,4 @@ console.log(v);
 
 
 console.log(schema.toString());
+

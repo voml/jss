@@ -1,8 +1,9 @@
 {
     "private": true,
+    "type": "module",
     "scripts": {
         "p": "cd pkg && npm publish",
-        "b" : "wasm-pack build --target nodejs --release",
+        "b": "wasm-pack build --target web --release",
         "u": "wee b && wee p"
     }
 }
