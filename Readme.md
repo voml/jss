@@ -5,18 +5,22 @@ A better way to write schemas
 
 ![](https://user-images.githubusercontent.com/17541209/179352862-4d2288d9-84e5-45f5-acd9-731ac8a21cfc.png)
 
+- Jss Version: [open-api.jss](https://github.com/voml/jss/blob/dev/projects/jss-core/tests/from_json/open-api.jss)
+- Json Schema Version: [open-api.json](https://github.com/voml/jss/blob/dev/projects/jss-core/tests/from_json/open-api.json)
+
 ## Tools and Implement
 
-
-### Jetbrain
-- [Jss Intellij](https://github.com/oovm/jss-intellij)
+### Intellij
+- [Jss Intellij](https://plugins.jetbrains.com/plugin/18376-jss-support)
 
 ### Rust
-- [jss-rs](https://github.com/voml/jss-rs)
+- [jss-rs](https://crates.io/crates/jss-core)
+- jss-cli: TODO
+- jss-mock: TODO
 
 ### Node
-- 
-- Online Playground: https://replit.com/@voml/Json-Schema-Simplified#index.js
+- Wasm bind: [jss-wasm](https://github.com/voml/jss/tree/dev/projects/jss-wasm)
+- Online Playground: [replit.com@jss](https://replit.com/@voml/Json-Schema-Simplified#index.js)
 
 ## Syntax
 
@@ -102,3 +106,6 @@ property dimensions: object {
 </details>
 
 ## Evolution
+
+- CLI Tools 
+- Mock data generator based on jss
