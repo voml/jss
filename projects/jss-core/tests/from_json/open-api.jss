@@ -53,18 +53,12 @@ define Contact: object {
     .name: string {
         minLength: 1
     }
-
-
     .url: string {
         format: "uri-reference"
     }
-
-
     .email: string {
         format: "email"
     }
-
-
 }
 
 define License: object {
@@ -75,15 +69,10 @@ define License: object {
     patternProperties: {
         "^x-": {},
     }
-    .name: string {
-    }
-
-
+    .name: string
     .url: string {
         format: "uri-reference"
     }
-
-
 }
 
 define Server: object {
@@ -96,12 +85,8 @@ define Server: object {
     }
     .url: string {
     }
-
-
     .description: string {
     }
-
-
     .variables: object {
         additionalProperties: {
             "$ref": "#/definitions/ServerVariable",
@@ -1664,8 +1649,6 @@ define Encoding: object {
     additionalProperties: false
     .contentType: string {
     }
-
-
     .headers: object {
         additionalProperties: {
             "oneOf": [
@@ -1678,8 +1661,6 @@ define Encoding: object {
             ],
         }
     }
-
-
     .style: string {
         enum: [
             "form",
@@ -1688,17 +1669,11 @@ define Encoding: object {
             "deepObject",
         ]
     }
-
-
     .explode: "boolean" {
     }
-
-
     .allowReserved: "boolean" {
         default: false
     }
-
-
 }
 
 property openapi: string {

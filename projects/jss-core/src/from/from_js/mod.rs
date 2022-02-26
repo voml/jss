@@ -24,7 +24,7 @@ impl JssSchema {
             Ok(o) => o,
             Err(e) => return vec![JsValue::from(JsError::from(e))],
         };
-        return self.validate(&value).into_iter().map(|e| JsValue::from(JsError::from(e))).collect();
+        return self.validate(&value).into_iter().map(|e| JsValue::from(e.to_string())).collect();
     }
     pub fn to_json_schema(&self) -> JsValue {
         let json = JsonValue::from(self);

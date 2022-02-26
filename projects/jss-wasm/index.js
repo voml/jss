@@ -1,4 +1,4 @@
-import Schema from "jss-wasmbind";
+const Schema = require("./pkg").Schema
 
 const schema = new Schema(`
 /// A product in the catalog
@@ -12,20 +12,17 @@ schema Product: object {
 properties productId: integer;
 `)
 
-var v = schema.validate({
+let v = schema.validate({
     productId: 1,
     productName: "A green door",
     price: 12.50,
     tags: ["home", "green"]
-})
+});
 
 console.log(v);
 
-var v = schema.validate([])
-
-console.log(v);
-
-
+console.log(schema.validate([]));
 
 console.log(schema.toString());
 
+console.log(schema.toJsonSchema())

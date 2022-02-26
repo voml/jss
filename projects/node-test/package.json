@@ -11,6 +11,6 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "jss-wasmbind": "0.2.3"
+        "jss-wasmbind": "0.2.4"
     }
 }

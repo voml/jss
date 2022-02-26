@@ -17,12 +17,12 @@ prop type {
     optional: true
 }
 
-prop properties: object {
+property properties: object {
+    optional: true
     default: {}
     additionalProperties: {
         "$ref": "#",
     }
-    optional: true
 }
 
 prop items {

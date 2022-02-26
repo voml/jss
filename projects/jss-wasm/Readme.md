@@ -6,6 +6,8 @@ npm i jss-wasmbind
 
 ## Example
 
+[Try online!](https://replit.com/@voml/Json-Schema-Simplified#index.js)
+
 ### Build the schema
 
 - build from jss
@@ -51,6 +53,6 @@ schema.validate([])
 ### Generate json schema for use with other json schema ecological libraries
 
 ```js
-schema.toJSON()
+schema.toJsonSchema()
 ```
 
