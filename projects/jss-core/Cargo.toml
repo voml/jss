@@ -2,9 +2,9 @@
 name = "jss-core"
 version = "0.1.3"
 authors = ["Aster <192607617@qq.com>"]
-description = "Pseudo-Chinese lorem ipsum generator"
-repository = "https://github.com/notedge/panduck/tree/master/projects/lipsum-cn"
-documentation = "https://docs.rs/lipsum-cn"
+description = "Json Simplified Schema Core Interface"
+repository = "https://github.com/voml/jss"
+documentation = "https://docs.rs/jss-core"
 readme = "../../readme.md"
 license = "MPL-2.0"
 edition = "2021"
