@@ -36,6 +36,9 @@ impl JssSchema {
     pub fn property() -> Self {
         Self::default()
     }
+    pub fn definition() -> Self {
+        Self { kind: JssKind::Definition, typing: JssType::Undefined, ..Default::default() }
+    }
     #[inline]
     pub fn anything() -> Self {
         Self { kind: JssKind::Scheme, typing: JssType::Anything, ..Default::default() }

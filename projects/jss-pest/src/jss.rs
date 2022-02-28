@@ -92,7 +92,7 @@ impl ::pest::Parser<Rule> for JssParser {
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
                 pub fn _define(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
-                    state.match_string("def").or_else(|state| state.match_string("define")).or_else(|state| state.match_string("^"))
+                    state.match_string("define").or_else(|state| state.match_string("def"))
                 }
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]

@@ -12,7 +12,7 @@ EmptyLine  = @{WHITESPACE* ~ NEWLINE}
 schema_statement = {"schema" ~ SYMBOL ~ COLON ~ block}
 /*====================================================================================================================*/
 define_statement = {_define ~ SYMBOL ~ COLON ~ block}
-_define = _{"def"|"define"|"^"}
+_define = _{"define"|"def"}
 /*====================================================================================================================*/
 /// .key = value
 property_statement = {_property ~ SYMBOL ~ COLON ~ block}

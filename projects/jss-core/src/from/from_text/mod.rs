@@ -52,6 +52,12 @@ impl ParseContext {
                     let name = property.get_name().to_string();
                     node.insert_property(name, property);
                 }
+                Rule::define_statement => {
+                    let mut define = self.parse_define_statement(pair)?;
+                    define.set_description(take(&mut self.documents));
+                    let name = define.get_name().to_string();
+                    node.insert_definition(name, define);
+                }
                 Rule::DOCUMENTATION => self.push_comment(pair),
                 _ => debug_cases!(pair),
             }
@@ -68,6 +74,17 @@ impl ParseContext {
             }
         }
         Ok(())
+    }
+    pub fn parse_define_statement(&mut self, pairs: Pair<Rule>) -> Result<JssSchema> {
+        let mut out = JssSchema::definition();
+        for pair in pairs.into_inner() {
+            match pair.as_rule() {
+                Rule::SYMBOL => out.set_name(pair.as_str()),
+                Rule::block => self.parse_block(pair, &mut out)?,
+                _ => debug_cases!(pair),
+            }
+        }
+        Ok(out)
     }
     pub fn parse_property_statement(&mut self, pairs: Pair<Rule>) -> Result<JssSchema> {
         let mut out = JssSchema::property();
