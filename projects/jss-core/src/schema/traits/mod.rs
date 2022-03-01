@@ -20,7 +20,7 @@ impl Default for JssSchema {
     fn default() -> Self {
         Self {
             kind: JssKind::Property,
-            name: None,
+            name: Some("_".to_string()),
             description: "".to_string(),
             typing: Default::default(),
             property: Default::default(),

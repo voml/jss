@@ -59,6 +59,10 @@ impl From<&JssSchema> for JsonValue {
         for (k, v) in jss.attributes() {
             object.insert(k.into(), v.clone().into());
         }
+        if jss.is_top() {
+            let definitions: JsonObject = jss.definitions().map(|(k, v)| (k.clone(), v.into())).collect();
+            object.insert("$defs".to_string(), definitions.into());
+        }
         let properties: JsonObject = jss.properties().map(|(k, v)| (k.clone(), v.into())).collect();
         object.insert("properties".to_string(), properties.into());
 

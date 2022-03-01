@@ -103,7 +103,35 @@ define License: object {
 <summary>Equivalent json schema</summary>
 
 ```json
-
+{
+    "title": "_",
+    "type": "undefined",
+    "$defs": {
+        "License": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "name"
+            ],
+            "patternProperties": {
+                "^x-": {}
+            },
+            "$defs": {},
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "properties": {}
+                },
+                "url": {
+                    "type": "string",
+                    "format": "uri-reference",
+                    "properties": {}
+                }
+            }
+        }
+    },
+    "properties": {}
+}
 ```
 
 </details>
@@ -129,7 +157,36 @@ property dimensions: object {
 <summary>Equivalent json schema</summary>
 
 ```json
-
+{
+    "title": "_",
+    "type": "undefined",
+    "properties": {
+        "dimensions": {
+            "type": "object",
+            "description": "Dimensions for the product",
+            "required": [
+                "length",
+                "width",
+                "height"
+            ],
+            "properties": {
+                "length": {
+                    "type": "number",
+                    "$defs": {},
+                    "properties": {}
+                },
+                "width": {
+                    "type": "number",
+                    "properties": {}
+                },
+                "height": {
+                    "type": "number",
+                    "properties": {}
+                }
+            }
+        }
+    }
+}
 ```
 
 </details>
