@@ -1,18 +1,18 @@
 [package]
 name = "jss-pest"
-version = "0.4.1"
+version = "0.4.2"
 authors = ["Aster <galaster@foxmail.com>"]
-description = "Arc Readable Configuration Parser via Pest"
+description = "Json Simplified Schema parser via pest"
 license = "MPL-2.0"
 readme = "../../readme.md"
-repository = "https://github.com/doki-land/arc-rs"
+repository = "https://github.com/voml/jss"
 exclude = ["/tests/*"]
 edition = "2018"
 
 
 [dependencies]
-pest = "2.1"
+pest = "2.1.3"
 
 [dev-dependencies]
-pest_generator = "2.1"
-quote = "1.0"
+pest_generator = "2.1.3"
+quote = "1.0.20"

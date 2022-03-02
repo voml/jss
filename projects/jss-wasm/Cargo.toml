@@ -1,7 +1,7 @@
 [package]
 publish = false
 name = "jss-wasmbind"
-version = "0.2.5"
+version = "0.3.0"
 authors = ["Aster <192607617@qq.com>"]
 description = "Json Simplified Schema Wasm Interface"
 repository = "https://github.com/voml/jss-rs"
@@ -15,4 +15,4 @@ crate-type = ["cdylib"]
 
 [dependencies]
 wasm-bindgen = "0.2.81"
-jss-core = {version = "0.1.1", path = "../jss-core", features = ["wasm"] }
+jss-core = {version = "0.2.0", path = "../jss-core", features = ["wasm"] }
