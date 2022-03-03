@@ -9,6 +9,7 @@
         "productName",
         "price"
     ],
+    "$defs": {},
     "properties": {
         "productId": {
             "type": "integer",
