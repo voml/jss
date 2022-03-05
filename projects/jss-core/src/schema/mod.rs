@@ -4,6 +4,8 @@ use indexmap::{map::Iter, IndexMap};
 
 use json_value::Number;
 
+#[cfg(feature = "mock")]
+mod mock;
 mod traits;
 mod typing;
 mod value;
