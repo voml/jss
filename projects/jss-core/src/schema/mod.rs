@@ -6,6 +6,9 @@ use json_value::Number;
 
 #[cfg(feature = "mock")]
 mod mock;
+
+mod inference;
+
 mod traits;
 mod typing;
 mod value;

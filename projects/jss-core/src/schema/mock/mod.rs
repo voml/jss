@@ -2,6 +2,9 @@ use crate::{JssKind, JssSchema, JssType, JssValue};
 
 impl JssSchema {
     pub fn mock(&self) -> JssValue {
+        self.mock_top()
+    }
+    fn mock_top(&self) -> JssValue {
         match self.typing {
             JssType::Undefined => {
                 unimplemented!()
@@ -16,9 +19,7 @@ impl JssSchema {
                 unimplemented!()
             }
             JssType::Integer => self.mock_integer(),
-            JssType::Number => {
-                unimplemented!()
-            }
+            JssType::Number => self.mock_number(),
             JssType::Array => {
                 unimplemented!()
             }
@@ -34,11 +35,9 @@ impl JssSchema {
         }
     }
     fn mock_integer(&self) -> JssValue {
-        match self.typing {
-            JssType::Integer => self.mock(),
-            _ => {
-                unimplemented!()
-            }
-        }
+        unimplemented!()
+    }
+    fn mock_number(&self) -> JssValue {
+        unimplemented!()
     }
 }
