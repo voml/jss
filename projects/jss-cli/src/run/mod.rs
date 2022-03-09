@@ -10,11 +10,9 @@ use clap::ArgEnum;
 use glob::glob;
 use tailwind_error::TailwindError;
 
-use tailwind_rs::{CssInlineMode, GlobalConfig, Result, TailwindBuilder};
+use crate::JssApplication;
 
-use crate::TailwindApp;
-
-impl TailwindApp {
+impl JssApplication {
     pub fn build_config(&self) -> (GlobalConfig, TailwindBuilder) {
         let mut config = GlobalConfig::default();
         config.css.mode = match self.mode {
@@ -45,7 +43,7 @@ impl TailwindApp {
     }
 }
 
-impl TailwindApp {
+impl JssApplication {
     pub fn run(&self, config: &GlobalConfig, builder: &mut TailwindBuilder) -> Result<()> {
         if let Some(c) = &self.command {
             return c.run(config);

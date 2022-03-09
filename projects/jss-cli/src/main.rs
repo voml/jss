@@ -4,15 +4,17 @@ use std::path::PathBuf;
 
 use clap::Parser;
 
-pub use self::{commands::TailwindCommands, run::Mode};
+pub use self::{commands::JssCommands, run::Mode};
+use jss_core::Result;
 
 mod commands;
 mod run;
 
+/// The main application.
 #[derive(Parser)]
 #[clap(author, version, about, long_about = None)]
 #[clap(propagate_version = true)]
-pub struct TailwindApp {
+pub struct JssApplication {
     /// Sets a custom config file
     #[clap(parse(from_os_str), value_name = "DIR")]
     workspace: Option<PathBuf>,
@@ -32,11 +34,11 @@ pub struct TailwindApp {
     #[clap(long, arg_enum)]
     mode: Option<Mode>,
     #[clap(subcommand)]
-    command: Option<TailwindCommands>,
+    command: Option<JssCommands>,
 }
 
 fn main() {
-    let cli = TailwindApp::parse();
+    let cli = JssApplication::parse();
     let (cfg, mut builder) = cli.build_config();
     cli.run(&cfg, &mut builder).ok();
 }

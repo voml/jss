@@ -2,17 +2,34 @@ use std::path::PathBuf;
 
 use clap::Subcommand;
 
-use tailwind_rs::{GlobalConfig, Result};
+use jss_core::Result;
 
 #[derive(Subcommand)]
-pub enum TailwindCommands {
+pub enum JssCommands {
+    /// Create jss from json and yaml schemas.
+    ///
+    /// Will generate files with the same name but different extensions.
     Init {
         #[clap(parse(from_os_str), value_name = "DIR")]
         workspace: Option<PathBuf>,
+        overwrite: bool,
     },
+    /// Generate json schema from jss schema.
+    ///
+    /// Will generate files with the same name but different extensions.
+    Gen {
+        #[clap(parse(from_os_str), value_name = "DIR")]
+        workspace: Option<PathBuf>,
+        overwrite: bool,
+    },
+    Infer {
+        #[clap(parse(from_os_str), value_name = "FILE")]
+        file: Option<PathBuf>,
+    },
+    Mock {},
 }
 
-impl TailwindCommands {
+impl JssCommands {
     pub fn run(&self, config: &GlobalConfig) -> Result<()> {
         let _ = config;
         println!("?");
@@ -20,6 +37,8 @@ impl TailwindCommands {
             Self::Init { workspace } => {
                 println!("'myapp add' was used, name is: {:?}", workspace)
             }
+            JssCommands::Gen { .. } => {}
+            JssCommands::Infer { .. } => {}
         }
         Ok(())
     }
