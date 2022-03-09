@@ -2,6 +2,7 @@ use std::path::PathBuf;
 
 use clap::Subcommand;
 
+use crate::JssApplication;
 use jss_core::Result;
 
 #[derive(Subcommand)]
@@ -27,6 +28,20 @@ pub enum JssCommands {
         file: Option<PathBuf>,
     },
     Mock {},
+}
+
+pub struct JssConfig {}
+
+impl Default for JssConfig {
+    fn default() -> Self {
+        Self {}
+    }
+}
+
+impl JssApplication {
+    pub fn build_config(&self) -> JssConfig {
+        JssConfig::default()
+    }
 }
 
 impl JssCommands {

@@ -1,4 +1,4 @@
-use crate::{JssKind, JssSchema, JssType, JssValue};
+use crate::{JssSchema, JssType, JssValue};
 
 impl JssSchema {
     pub fn mock(&self) -> JssValue {

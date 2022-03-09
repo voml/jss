@@ -4,7 +4,7 @@ use std::path::PathBuf;
 
 use clap::Parser;
 
-pub use self::{commands::JssCommands, run::Mode};
+pub use self::commands::JssCommands;
 use jss_core::Result;
 
 mod commands;
@@ -37,8 +37,18 @@ pub struct JssApplication {
     command: Option<JssCommands>,
 }
 
-fn main() {
+fn main() -> Result<()> {
     let cli = JssApplication::parse();
-    let (cfg, mut builder) = cli.build_config();
-    cli.run(&cfg, &mut builder).ok();
+    let cfg = cli.build_config();
+    match cli.command {
+        Some(cmd) => {
+            cmd.run(&mut cfg)?;
+        }
+        None => {
+            let cmd = JssCommands::default();
+
+            cmd.run(&mut cfg)?;
+        }
+    }
+    Ok(())
 }
