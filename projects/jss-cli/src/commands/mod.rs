@@ -44,16 +44,21 @@ impl JssApplication {
     }
 }
 
+impl Default for JssCommands {
+    fn default() -> Self {
+        JssCommands::Init { workspace: None, overwrite: false }
+    }
+}
+
 impl JssCommands {
-    pub fn run(&self, config: &GlobalConfig) -> Result<()> {
+    pub fn run(&self, config: &mut JssConfig) -> Result<()> {
         let _ = config;
         println!("?");
         match self {
-            Self::Init { workspace } => {
-                println!("'myapp add' was used, name is: {:?}", workspace)
-            }
+            JssCommands::Init { .. } => {}
             JssCommands::Gen { .. } => {}
             JssCommands::Infer { .. } => {}
+            JssCommands::Mock { .. } => {}
         }
         Ok(())
     }

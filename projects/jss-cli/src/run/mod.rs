@@ -1,8 +1,4 @@
-use std::{
-    env::{current_dir, set_current_dir},
-    fs,
-    path::Path,
-};
+use std::env::{current_dir, set_current_dir};
 
 use crate::JssApplication;
 use jss_core::Result;

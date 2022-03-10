@@ -31,24 +31,15 @@ pub struct JssApplication {
     dry_run: bool,
     #[clap(short, parse(from_occurrences))]
     details: usize,
-    #[clap(long, arg_enum)]
-    mode: Option<Mode>,
+    // #[clap(long, arg_enum)]
+    // mode: Option<Mode>,
     #[clap(subcommand)]
     command: Option<JssCommands>,
 }
 
 fn main() -> Result<()> {
     let cli = JssApplication::parse();
-    let cfg = cli.build_config();
-    match cli.command {
-        Some(cmd) => {
-            cmd.run(&mut cfg)?;
-        }
-        None => {
-            let cmd = JssCommands::default();
-
-            cmd.run(&mut cfg)?;
-        }
-    }
-    Ok(())
+    let mut cfg = cli.build_config();
+    let cmd = cli.command.unwrap_or_default();
+    cmd.run(&mut cfg)
 }
