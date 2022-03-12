@@ -1,6 +1,6 @@
 [package]
 name = "json-value"
-version = "0.3.2"
+version = "0.3.3"
 authors = ["Aster <192607617@qq.com>"]
 description = "Helper method to get the json value"
 repository = "https://github.com/voml/jss/tree/master/projects/json-value"

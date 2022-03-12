@@ -1,5 +1,6 @@
 use serde_json::Map;
 
+/// Attempt to convert json value to specified type
 pub trait JsonValueWrap
 where
     Self: Sized,
@@ -14,6 +15,7 @@ where
     fn into_object(self) -> Option<Map<String, Self>>;
 }
 
+/// Check the type of json value
 pub trait JsonValueCheck: JsonValueWrap
 where
     Self: Sized,
@@ -42,6 +44,7 @@ where
     }
 }
 
+/// Treat json value as array and get data from it according to index
 pub trait JsonMaybeArray: JsonValueWrap
 where
     Self: Sized,
@@ -50,6 +53,7 @@ where
     fn mut_index(&mut self, index: usize) -> Option<&mut Self>;
 }
 
+/// Treat json value as object and get data from it according to key
 pub trait JsonMaybeObject: JsonValueWrap
 where
     Self: Sized,

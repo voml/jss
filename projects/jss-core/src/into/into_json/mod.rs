@@ -6,7 +6,7 @@ use crate::{JssError, JssSchema, JssType, JssValue, Result};
 
 impl JssSchema {
     pub fn as_json_schema(&self) -> String {
-        to_string_pretty(&JsonValue::from(self))
+        to_string_pretty(&JsonValue::from(self), 4)
     }
     pub fn as_validator(&self) -> Result<JSONSchema> {
         let schema = JsonValue::from(self);
