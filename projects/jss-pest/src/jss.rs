@@ -32,7 +32,6 @@ pub enum Rule {
     Integer,
     Exponent,
     Sign,
-    string,
     STRING_INLINE,
     ESCAPED,
     S1,
@@ -140,7 +139,7 @@ impl ::pest::Parser<Rule> for JssParser {
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
                 pub fn data(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
-                    state.atomic(::pest::Atomicity::NonAtomic, |state| state.rule(Rule::data, |state| self::URL(state).or_else(|state| self::Special(state)).or_else(|state| self::Byte(state)).or_else(|state| self::Number(state)).or_else(|state| self::string(state)).or_else(|state| self::array(state)).or_else(|state| self::object(state))))
+                    state.atomic(::pest::Atomicity::NonAtomic, |state| state.rule(Rule::data, |state| self::URL(state).or_else(|state| self::Special(state)).or_else(|state| self::Byte(state)).or_else(|state| self::Number(state)).or_else(|state| self::STRING_INLINE(state)).or_else(|state| self::array(state)).or_else(|state| self::object(state))))
                 }
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
@@ -206,11 +205,6 @@ impl ::pest::Parser<Rule> for JssParser {
                 #[allow(non_snake_case, unused_variables)]
                 pub fn Sign(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
                     state.rule(Rule::Sign, |state| state.atomic(::pest::Atomicity::Atomic, |state| state.match_string("+").or_else(|state| state.match_string("-"))))
-                }
-                #[inline]
-                #[allow(non_snake_case, unused_variables)]
-                pub fn string(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
-                    state.rule(Rule::string, |state| self::STRING_INLINE(state))
                 }
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
@@ -370,7 +364,6 @@ impl ::pest::Parser<Rule> for JssParser {
             Rule::Integer => rules::Integer(state),
             Rule::Exponent => rules::Exponent(state),
             Rule::Sign => rules::Sign(state),
-            Rule::string => rules::string(state),
             Rule::STRING_INLINE => rules::STRING_INLINE(state),
             Rule::ESCAPED => rules::ESCAPED(state),
             Rule::S1 => rules::S1(state),
