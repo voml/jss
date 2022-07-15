@@ -9,10 +9,10 @@ impl Debug for JssSchema {
         };
         w.field("type", &self.typing);
         if let JssKind::Scheme = &self.kind {
-            w.field("definition", &self.definition);
+            w.field("definitions", &self.definition);
         }
         w.field("keywords", &self.keywords);
-        w.field("annotations", &self.attribute);
+        w.field("attributes", &self.attribute);
         w.field("properties", &self.property);
         w.finish()
     }
@@ -22,7 +22,7 @@ impl Debug for JssValue {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::Null => f.write_str("null"),
-            Self::Bool(v) => Debug::fmt(v, f),
+            Self::Boolean(v) => Debug::fmt(v, f),
             Self::Number(v) => Display::fmt(v, f),
             Self::String(v) => Debug::fmt(v, f),
             Self::Url(v) => f.write_str(v),
@@ -46,6 +46,7 @@ impl Debug for JssType {
             Self::Object => f.write_str("Object"),
             Self::Reference(v) => Debug::fmt(v, f),
             Self::Complex(v) => Debug::fmt(v, f),
+            JssType::Array => f.write_str("Array"),
         }
     }
 }

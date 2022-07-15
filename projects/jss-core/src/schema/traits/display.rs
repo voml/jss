@@ -72,7 +72,7 @@ impl Display for JssValue {
             Self::Null => {
                 unimplemented!()
             }
-            Self::Bool(_) => {
+            Self::Boolean(_) => {
                 unimplemented!()
             }
             Self::Number(_) => {
@@ -119,6 +119,7 @@ impl Display for JssType {
                 write!(f, ": {:?}", v)
             }
             JssType::String => write!(f, ": string"),
+            JssType::Array => write!(f, ": array"),
         }
     }
 }

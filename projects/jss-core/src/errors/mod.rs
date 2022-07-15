@@ -5,6 +5,7 @@ use std::{
 
 mod from_pest;
 mod from_serde_json;
+mod from_std;
 mod from_validate;
 
 /// All result about jss
@@ -61,6 +62,13 @@ impl JssError {
         S: Into<String>,
     {
         let kind = JssErrorKind::RuntimeError(msg.into());
+        Self { kind: Box::new(kind), line: 0, column: 0 }
+    }
+    pub fn syntax_error<S>(msg: S) -> Self
+    where
+        S: Into<String>,
+    {
+        let kind = JssErrorKind::SyntaxError(msg.into());
         Self { kind: Box::new(kind), line: 0, column: 0 }
     }
 
