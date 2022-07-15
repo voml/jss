@@ -18,7 +18,7 @@ impl JssSchema {
 }
 
 impl JssSchema {
-    pub fn parse_json_schema_as_jss(top: Value) -> Result<Self, Vec<JssError>> {
+    pub fn parse_json_schema_as_jss(top: JsonValue) -> Result<Self, Vec<JssError>> {
         let mut errors = vec![];
         match Self::parse_json_schema(top, &mut errors) {
             Ok(o) => Ok(o),
@@ -29,7 +29,7 @@ impl JssSchema {
         }
     }
 
-    pub fn parse_json_schema(top: Value, errors: Errors) -> Result<Self> {
+    pub fn parse_json_schema(top: JsonValue, errors: Errors) -> Result<Self> {
         let mut top = top;
         // https://json-schema.org/understanding-json-schema/basics.html#id1
         // Accepts anything, as long as it’s valid JSON
@@ -55,7 +55,7 @@ impl JssSchema {
 }
 
 impl JssSchema {
-    pub fn parse_value(name: String, value: Value, errors: Errors) -> Result<Self> {
+    pub fn parse_value(name: String, value: JsonValue, errors: Errors) -> Result<Self> {
         let mut value = value;
         let mut jss = Self::default();
         jss.name = Some(name);
@@ -63,13 +63,13 @@ impl JssSchema {
         jss.consume_rest(value, errors);
         Ok(jss)
     }
-    fn parse_steps(&mut self, is_top: bool, value: &mut Value, errors: Errors) {
+    fn parse_steps(&mut self, is_top: bool, value: &mut JsonValue, errors: Errors) {
         self.parse_type(value, errors);
         self.extend_properties("properties", is_top, value, errors);
         self.extend_definition("$defs", value, errors);
         self.extend_definition("definitions", value, errors);
     }
-    fn consume_rest(&mut self, value: Value, _: Errors) {
+    fn consume_rest(&mut self, value: JsonValue, _: Errors) {
         let object = match value.into_object() {
             None => return,
             Some(s) => s,
@@ -86,7 +86,7 @@ impl JssSchema {
 }
 
 impl JssSchema {
-    pub fn extend_properties(&mut self, key: &str, is_top: bool, value: &mut Value, errors: Errors) {
+    pub fn extend_properties(&mut self, key: &str, is_top: bool, value: &mut JsonValue, errors: Errors) {
         if let Some(object) = value.extract_key_as_object(key) {
             for (key, value) in object {
                 match JssSchema::parse_value(key.to_owned(), value, errors) {
@@ -102,7 +102,7 @@ impl JssSchema {
         }
     }
 
-    pub fn extend_definition(&mut self, key: &str, value: &mut Value, errors: Errors) {
+    pub fn extend_definition(&mut self, key: &str, value: &mut JsonValue, errors: Errors) {
         if let Some(object) = value.extract_key_as_object(key) {
             for (key, value) in object {
                 match JssSchema::parse_value(key.to_owned(), value, errors) {

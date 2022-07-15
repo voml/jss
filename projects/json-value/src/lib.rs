@@ -1,9 +1,12 @@
 #![doc = include_str!("../Readme.md")]
 
+use serde_json::Value;
+pub use serde_json::{Error, Number};
+
+pub use self::methods::*;
+
 mod json;
 mod methods;
 
-pub use self::methods::*;
-pub use serde_json::{Error, Number, Value};
-
+pub type JsonValue = Value;
 pub type JsonObject = serde_json::Map<String, Value>;

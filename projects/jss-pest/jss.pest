@@ -78,7 +78,7 @@ URL    = @{ASCII_ALPHA+ ~ "://" ~ (XID_CONTINUE|"_"|"-"|"/"|".")*}
 ///Gray
 COMMENT          = _{MultiLineComment|LineComment}
 WHITESPACE       = _{NEWLINE|SPACE_SEPARATOR|"\t"}
-LineComment      = ${"//" ~ (!NEWLINE ~ ANY)*}
-MultiLineComment = ${"/*" ~ (MultiLineComment | !"*/" ~ ANY)* ~ "*/"}
+LineComment      = @{"//" ~ (!NEWLINE ~ ANY)*}
+MultiLineComment = @{"/*" ~ (MultiLineComment | !"*/" ~ ANY)* ~ "*/"}
 
 SEPARATOR  = _{","|";"}

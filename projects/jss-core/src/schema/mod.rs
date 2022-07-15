@@ -4,7 +4,7 @@ mod traits;
 mod value;
 
 use indexmap::IndexMap;
-use json_value::{JsonMaybeObject, JsonValueCheck, JsonValueWrap, Number, Value};
+use json_value::{JsonMaybeObject, JsonValue, JsonValueCheck, JsonValueWrap, Number};
 use std::fmt::{Debug, Display, Formatter};
 
 pub struct JssSchema {
