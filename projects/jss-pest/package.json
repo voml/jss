@@ -1,0 +1,8 @@
+{
+    "private": true,
+    "scripts": {
+        "pub": "cargo publish --allow-dirty",
+        "gen": "cargo test --color=always --test main gen_parser -- --ignored --exact -Z unstable-options --format=json --show-output",
+        "pest": "wee gen && cargo fmt"
+    }
+}
