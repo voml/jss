@@ -18,22 +18,3 @@ impl JssValue {
         }
     }
 }
-
-impl From<String> for JssType {
-    fn from(s: String) -> Self {
-        JssType::from(s.as_str())
-    }
-}
-
-impl From<&str> for JssType {
-    fn from(s: &str) -> Self {
-        match s {
-            "object" => JssType::Object,
-            "integer" => JssType::Integer,
-            "number" => JssType::Number,
-            "string" => JssType::String,
-            "array" => JssType::Array,
-            _ => unimplemented!("{:?}", s),
-        }
-    }
-}
