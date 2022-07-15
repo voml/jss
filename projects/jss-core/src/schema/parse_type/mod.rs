@@ -1,5 +1,5 @@
 use super::*;
-
+use crate::{Errors, JssError, Result};
 
 impl JssType {
     pub fn parse_value(typing: Value, value: &mut Value, errors: Errors) -> Result<Self> {
@@ -43,7 +43,7 @@ impl JssStringType {
     pub fn parse(&mut self, value: &mut Value, errors: Errors) {
         self.parse_pattern("pattern", value, errors)
     }
-    fn parse_pattern(&mut self, key: &str, value: &mut Value, _: &mut Vec<JssError>) {
+    fn parse_pattern(&mut self, key: &str, value: &mut Value, _: Errors) {
         if let Some(s) = value.extract_key_as_string(key) {
             self.pattern = JssValue::Regex(s)
         }
@@ -51,7 +51,7 @@ impl JssStringType {
 }
 
 impl JssSchema {
-    pub fn parse_type(&mut self, value: &mut Value, errors: &mut Vec<JssError>) {
+    pub fn parse_type(&mut self, value: &mut Value, errors: Errors) {
         if let Some(s) = value.extract_key("$ref") {
             self.for_ref(s, errors);
             return;
@@ -60,13 +60,13 @@ impl JssSchema {
             self.for_type(s, value, errors);
         }
     }
-    fn for_type(&mut self, typing: Value, value: &mut Value, errors: &mut Vec<JssError>) {
+    fn for_type(&mut self, typing: Value, value: &mut Value, errors: Errors) {
         match JssType::parse_value(typing, value, errors) {
             Ok(t) => self.typing = t,
             Err(e) => errors.push(e),
         }
     }
-    fn for_ref(&mut self, value: Value, errors: &mut Vec<JssError>) {
+    fn for_ref(&mut self, value: Value, errors: Errors) {
         match value.into_string() {
             None => {
                 errors.push(JssError::runtime_error("`$ref` must string"));

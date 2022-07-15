@@ -1,12 +1,13 @@
-mod from_serde_json;
-mod from_validate;
 use std::{
     error::Error,
     fmt::{Display, Formatter},
 };
 
+mod from_serde_json;
+mod from_validate;
+
 /// All result about jss
-pub type Result<T> = std::result::Result<T, JssError>;
+pub type Result<T, E = JssError> = std::result::Result<T, E>;
 /// Errors Collector
 pub type Errors<'a> = &'a mut Vec<JssError>;
 
@@ -44,6 +45,23 @@ pub enum JssErrorKind {
     Unreachable,
     // #[error(transparent)]
     // UnknownError(#[from] anyhow::Error),
+}
+
+impl JssError {
+    pub fn undefined_variable<S>(msg: S) -> Self
+    where
+        S: Into<String>,
+    {
+        let kind = JssErrorKind::UndefinedVariable { name: msg.into() };
+        Self { kind: Box::new(kind), line: 0, column: 0 }
+    }
+    pub fn runtime_error<S>(msg: S) -> Self
+    where
+        S: Into<String>,
+    {
+        let kind = JssErrorKind::RuntimeError(msg.into());
+        Self { kind: Box::new(kind), line: 0, column: 0 }
+    }
 }
 
 impl Error for JssError {}
