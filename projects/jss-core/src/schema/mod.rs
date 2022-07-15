@@ -14,16 +14,60 @@ pub struct JssSchema {
     /// The kind of this node
     pub kind: JssKind,
     /// The name of the node
-    pub name: Option<String>,
+    name: Option<String>,
     /// The documentations of the node
     pub description: Option<String>,
     /// type definition
-    pub typing: JssType,
-    ///
-    pub properties: IndexMap<String, JssSchema>,
+    typing: JssType,
+    /// .key = value
+    pub property: IndexMap<String, JssSchema>,
+    /// Top level node only
+    /// ^key = value
     pub definition: IndexMap<String, JssSchema>,
-    pub annotation: IndexMap<String, JssValue>,
+    /// key = value
+    pub attribute: IndexMap<String, JssValue>,
     pub keywords: IndexMap<String, JssValue>,
+}
+
+impl JssSchema {
+    pub fn get_name(&self) -> &str {
+        debug_assert!(self.name.is_some());
+        match &self.name {
+            Some(s) => s.as_str(),
+            None => "",
+        }
+    }
+    pub fn set_name<S>(&mut self, name: S)
+    where
+        S: Into<String>,
+    {
+        self.name = Some(name.into())
+    }
+
+    pub fn get_type(&self) -> &JssType {
+        &self.typing
+    }
+    pub fn set_type<S>(&mut self, typing: S)
+    where
+        S: Into<JssType>,
+    {
+        self.typing = typing.into()
+    }
+}
+
+impl From<String> for JssType {
+    fn from(s: String) -> Self {
+        JssType::from(s.as_str())
+    }
+}
+
+impl From<&str> for JssType {
+    fn from(s: &str) -> Self {
+        match s {
+            "object" => JssType::Object,
+            _ => unimplemented!("{:?}", s),
+        }
+    }
 }
 
 #[derive(Debug)]

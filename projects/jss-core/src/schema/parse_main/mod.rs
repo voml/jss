@@ -77,7 +77,7 @@ impl JssSchema {
                 self.keywords.insert(k, v.into())
             }
             else {
-                self.annotation.insert(k, v.into())
+                self.attribute.insert(k, v.into())
             };
         }
     }
@@ -92,7 +92,7 @@ impl JssSchema {
                         if is_top {
                             o.kind = JssKind::PropertyTop
                         }
-                        self.properties.insert(key, o);
+                        self.property.insert(key, o);
                     }
                     Err(e) => errors.push(e),
                 }

@@ -9,18 +9,17 @@ statement = _{
 }
 EmptyLine  = @{WHITESPACE* ~ NEWLINE}
 /*====================================================================================================================*/
-schema_statement = {"schema" ~ SYMBOL ~ COLON ~ object}
+schema_statement = {"schema" ~ SYMBOL ~ COLON ~ block}
 /*====================================================================================================================*/
-define_statement = {_define ~ SYMBOL ~ COLON ~ object}
+define_statement = {_define ~ SYMBOL ~ COLON ~ block}
 _define = _{"def"|"define"|"^"}
 /*====================================================================================================================*/
 /// .key = value
-property_statement = {_property ~ SYMBOL ~ COLON ~ object}
+property_statement = {_property ~ SYMBOL ~ COLON ~ block}
 _property = _{"property"|"properties"|"prop"|DOT}
 DOT       = _{"."}
 /*====================================================================================================================*/
-block = {"{" ~ (block_valid|SEPARATOR)* ~ "}"}
-block_valid = _{property_statement|attitude_statement|DOCUMENTATION}
+block = {key ~ object | key | object}
 /*====================================================================================================================*/
 /// key = value
 attitude_statement = {key ~ SET ~ data}
@@ -35,7 +34,8 @@ data = !{
   | string | array | object
 }
 /*====================================================================================================================*/
-object = {key ~ block | key | block}
+object = {"{" ~ (object_item|SEPARATOR)* ~ "}"}
+object_item = _{property_statement|attitude_statement|DOCUMENTATION}
 array = {"["  ~ (data|SEPARATOR)*  ~  "]"}
 /*====================================================================================================================*/
 ///#D19A66

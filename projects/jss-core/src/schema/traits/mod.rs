@@ -23,9 +23,9 @@ impl Default for JssSchema {
             name: None,
             description: None,
             typing: Default::default(),
-            properties: Default::default(),
+            property: Default::default(),
             definition: Default::default(),
-            annotation: Default::default(),
+            attribute: Default::default(),
             keywords: Default::default(),
         }
     }
@@ -47,14 +47,5 @@ impl JssSchema {
     #[inline]
     pub fn top() -> Self {
         Self { kind: JssKind::Scheme, typing: JssType::Undefined, ..Default::default() }
-    }
-}
-
-impl JssSchema {
-    pub fn set_name<S>(&mut self, name: S)
-    where
-        S: Into<String>,
-    {
-        self.name = Some(name.into())
     }
 }

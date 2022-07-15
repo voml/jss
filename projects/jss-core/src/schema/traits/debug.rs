@@ -1,12 +1,10 @@
 use super::*;
 
-
-
 impl Debug for JssSchema {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let w = &mut match self.kind {
             JssKind::Scheme => f.debug_struct("JssScheme"),
-            JssKind::Property| JssKind::PropertyTop => f.debug_struct("JssProperty"),
+            JssKind::Property | JssKind::PropertyTop => f.debug_struct("JssProperty"),
             JssKind::Definition => f.debug_struct("JssDefinition"),
         };
         w.field("type", &self.typing);
@@ -14,12 +12,11 @@ impl Debug for JssSchema {
             w.field("definition", &self.definition);
         }
         w.field("keywords", &self.keywords);
-        w.field("annotations", &self.annotation);
-        w.field("properties", &self.properties);
+        w.field("annotations", &self.attribute);
+        w.field("properties", &self.property);
         w.finish()
     }
 }
-
 
 impl Debug for JssValue {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
@@ -39,13 +36,13 @@ impl Debug for JssValue {
 impl Debug for JssType {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
-            Self::Undefined => { f.write_str("Undefined") }
-            Self::Anything => { f.write_str("Anything") }
-            Self::Nothing => { f.write_str("Nothing") }
-            Self::String(v) => { Debug::fmt(v, f) }
-            Self::Number => { f.write_str("Number") }
-            Self::Object => { f.write_str("Object") }
-            Self::Reference(v) => { Debug::fmt(v, f) }
+            Self::Undefined => f.write_str("Undefined"),
+            Self::Anything => f.write_str("Anything"),
+            Self::Nothing => f.write_str("Nothing"),
+            Self::String(v) => Debug::fmt(v, f),
+            Self::Number => f.write_str("Number"),
+            Self::Object => f.write_str("Object"),
+            Self::Reference(v) => Debug::fmt(v, f),
         }
     }
 }
