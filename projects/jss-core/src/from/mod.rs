@@ -1,10 +1,12 @@
-use crate::JssError;
-use jsonschema::{Draft, JSONSchema};
-use serde_json::{json, Value};
+mod from_text;
 
-#[test]
-fn test() -> Result<(), JssError> {
-    let schema: Value = serde_json::from_str(
+use crate::JssError;
+use json_value::Value;
+use jsonschema::{Draft, JSONSchema};
+use std::str::FromStr;
+
+fn valid_from_string() -> Result<(), JssError> {
+    let schema = Value::from_str(
         r#"
         {"maxLength": 5}
     "#,

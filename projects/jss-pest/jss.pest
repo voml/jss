@@ -4,13 +4,14 @@ statement = _{
   | EmptyLine{1,}
   | schema_statement
   | property_statement
+  | define_statement
 }
 EmptyLine  = @{WHITESPACE* ~ NEWLINE}
 /*====================================================================================================================*/
-schema_statement =  {"schema" ~ SYMBOL ~ COLON ~ object}
+schema_statement = {"schema" ~ SYMBOL ~ COLON ~ object}
 /*====================================================================================================================*/
-define_statement =  {_define ~ SYMBOL? ~ STRING_INLINE}
-_define = _{"def"|"define"}
+define_statement = {_define ~ SYMBOL ~ COLON ~ object}
+_define = _{"def"|"define"|"^"}
 /*====================================================================================================================*/
 property_statement = {_property ~ SYMBOL ~ COLON ~ object}
 _property = _{"property"|"properties"|"prop"|DOT}
@@ -20,30 +21,29 @@ block = {"{" ~ (block_valid|SEPARATOR)* ~ "}"}
 block_valid = _{property_statement|attitude_statement}
 /*====================================================================================================================*/
 attitude_statement = {key ~ SET ~ data}
-key = {SYMBOL|string}
-/*====================================================================================================================*/
-pair = {SYMBOL ~ SET}
+key = {SYMBOL|STRING_INLINE}
+REQUIRED = @{"!"}
 /*====================================================================================================================*/
 COLON = @{":"}
 SET = @{":"|"="}
 /*====================================================================================================================*/
 data = !{
-    URL | Special|Cite|Byte|Number
+    URL |Special|Byte|Number
   | string | array | object
 }
 /*====================================================================================================================*/
-object = {SYMBOL ~ block | SYMBOL | block}
+object = {key ~ block | key | block}
 array = {"["  ~ (data|SEPARATOR)*  ~  "]"}
 /*====================================================================================================================*/
 ///#D19A66
 Special = @{"true"|"false"|"null"}
-Byte    = @{"0" ~ ASCII_ALPHA ~ (ASCII_ALPHANUMERIC|"_"|"-")}
 /*====================================================================================================================*/
 ///#56B6C2
 Cite = ${"$" ~ "namespace"}
 /*====================================================================================================================*/
-//!#D19A66: SignedNumber
-Number       = ${(Exponent|SignedNumber) ~ SYMBOL?}
+//!#D19A66: Number|Byte
+Number       = ${Exponent|SignedNumber}
+Byte         = @{"0" ~ ASCII_ALPHA ~ (ASCII_ALPHANUMERIC|"_"|"-")}
 SignedNumber = ${Sign? ~ (Decimal|DecimalBad|Integer)}
 Decimal      = ${Integer ~ DOT ~ ("_"? ~ ASCII_DIGIT)*}
 DecimalBad   = ${Integer ~ DOT|DOT ~ ("_"? ~ ASCII_DIGIT)*}
@@ -76,7 +76,7 @@ URL    = @{ASCII_ALPHA+ ~ "://" ~ (XID_CONTINUE|"_"|"-"|"/"|".")*}
 // NEWLINE = @{"\r" ~ "\n"|"\r"|"\n"}
 
 ///Gray
-COMMENT          =  {MultiLineComment|LineComment}
+COMMENT          = _{MultiLineComment|LineComment}
 WHITESPACE       = _{NEWLINE|SPACE_SEPARATOR|"\t"}
 LineComment      = ${"//" ~ (!NEWLINE ~ ANY)*}
 MultiLineComment = ${"/*" ~ (MultiLineComment | !"*/" ~ ANY)* ~ "*/"}

@@ -1,5 +1,5 @@
 use crate::{JssError, JssErrorKind};
-use serde_json::Error;
+use json_value::Error;
 
 impl From<Error> for JssError {
     fn from(e: Error) -> Self {

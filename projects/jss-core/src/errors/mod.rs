@@ -3,6 +3,7 @@ use std::{
     fmt::{Display, Formatter},
 };
 
+mod from_pest;
 mod from_serde_json;
 mod from_validate;
 
