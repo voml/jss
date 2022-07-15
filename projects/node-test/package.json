@@ -1,5 +1,5 @@
 {
-    "name": "jss-wasmbind",
+    "name": "jss-wasm",
     "collaborators": [
         "Aster <192607617@qq.com>"
     ],
@@ -11,10 +11,11 @@
         "url": "https://github.com/voml/jss-rs"
     },
     "main": "src/index.js",
+    "type": "module",
     "scripts": {
         "p": "npm publish"
     },
     "dependencies": {
-        "jss-wasmbind": "0.1.0"
+        "jss-wasmbind": "file:../../../jss-wasm/pkg"
     }
 }
