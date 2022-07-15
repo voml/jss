@@ -2,7 +2,7 @@ use std::fmt::{Debug, Display, Formatter};
 
 use indexmap::IndexMap;
 
-use json_value::{JsonMaybeObject, JsonValue, JsonValueCheck, JsonValueWrap, Number};
+use json_value::Number;
 
 mod traits;
 mod typing;
@@ -70,7 +70,7 @@ pub enum JssKind {
     Definition,
 }
 
-#[derive(PartialEq)]
+#[derive(Debug, PartialEq)]
 pub enum JssType {
     Undefined,
     Anything,
@@ -81,13 +81,13 @@ pub enum JssType {
     Array,
     Object,
     Reference(String),
-    Complex(Box<JssStringType>),
+    Complex(Box<JssComplexType>),
 }
 
 #[derive(PartialEq)]
-pub struct JssStringType {
+pub struct JssComplexType {
     /// Jss String
-    pattern: JssValue,
+    pub pattern: JssValue,
 }
 
 /// Represents any valid JSON value.

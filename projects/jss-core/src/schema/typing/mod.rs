@@ -19,14 +19,14 @@ impl From<&str> for JssType {
     }
 }
 
-impl Default for JssStringType {
+impl Default for JssComplexType {
     fn default() -> Self {
         Self { pattern: JssValue::string("") }
     }
 }
 
-impl From<JssStringType> for JssType {
-    fn from(v: JssStringType) -> Self {
+impl From<JssComplexType> for JssType {
+    fn from(v: JssComplexType) -> Self {
         Self::Complex(Box::new(v))
     }
 }

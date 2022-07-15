@@ -7,7 +7,8 @@ fn test_basic() {
     let text = include_str!("simple/basic.jss");
     let target = include_str!("simple/basic.txt");
     let r = JssSchema::from_str(text).unwrap();
-    assert_eq!(format!("{:#?}", r), target)
+    println!("{:#?}", r.validate("{}"));
+    assert_eq!(format!("{:#?}", r), target);
 }
 
 #[test]

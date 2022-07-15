@@ -33,25 +33,7 @@ impl Debug for JssValue {
     }
 }
 
-impl Debug for JssType {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Self::Undefined => f.write_str("Undefined"),
-            Self::Anything => f.write_str("Anything"),
-            Self::Nothing => f.write_str("Nothing"),
-            JssType::String => f.write_str("String"),
-
-            Self::Integer => f.write_str("Integer"),
-            Self::Number => f.write_str("Number"),
-            Self::Object => f.write_str("Object"),
-            Self::Reference(v) => Debug::fmt(v, f),
-            Self::Complex(v) => Debug::fmt(v, f),
-            JssType::Array => f.write_str("Array"),
-        }
-    }
-}
-
-impl Debug for JssStringType {
+impl Debug for JssComplexType {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let w = &mut f.debug_struct("string");
         if !self.pattern.is_empty() {
