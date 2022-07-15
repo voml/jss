@@ -1,6 +1,6 @@
 [package]
 name = "jss-pest"
-version = "0.4.0"
+version = "0.4.1"
 authors = ["Aster <galaster@foxmail.com>"]
 description = "Arc Readable Configuration Parser via Pest"
 license = "MPL-2.0"

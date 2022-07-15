@@ -5,6 +5,8 @@ pub use self::{
     from::parse_json,
     schema::{JssKind, JssSchema, JssType, JssValue},
 };
+#[cfg(feature = "wasm")]
+pub use json_value::JsonValue;
 
 mod errors;
 mod from;

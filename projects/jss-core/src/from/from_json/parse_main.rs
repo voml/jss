@@ -27,7 +27,7 @@ impl JssSchema {
         }
     }
 
-    fn try_parse_json_schema(top: JsonValue, errors: Errors) -> Result<Self> {
+    pub(crate) fn try_parse_json_schema(top: JsonValue, errors: Errors) -> Result<Self> {
         let mut top = top;
         // https://json-schema.org/understanding-json-schema/basics.html#id1
         // Accepts anything, as long as it’s valid JSON
