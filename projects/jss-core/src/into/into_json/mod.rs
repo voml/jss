@@ -1,6 +1,8 @@
-use crate::{JssError, JssSchema, JssType, JssValue, Result};
-use json_value::{to_string_pretty, JsonObject, JsonValue};
 use jsonschema::{Draft, JSONSchema};
+
+use json_value::{to_string_pretty, JsonObject, JsonValue};
+
+use crate::{JssError, JssSchema, JssType, JssValue, Result};
 
 impl JssSchema {
     pub fn as_json_schema(&self) -> String {
@@ -47,7 +49,10 @@ impl From<&JssSchema> for JsonValue {
         if jss.is_top() {
             object.insert("title".to_string(), jss.get_name().into());
         }
-        object.insert("type".to_string(), jss.get_type().into());
+        match jss.is_ref_type() {
+            true => object.insert("$ref".to_string(), jss.get_type().into()),
+            false => object.insert("type".to_string(), jss.get_type().into()),
+        };
         if jss.has_description() {
             object.insert("description".to_string(), jss.get_description().into());
         }

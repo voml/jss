@@ -23,73 +23,11 @@ pub struct JssSchema {
     property: IndexMap<String, JssSchema>,
     /// Top level node only
     /// ^key = value
-    pub definition: IndexMap<String, JssSchema>,
+    definition: IndexMap<String, JssSchema>,
     /// key = value
     attribute: IndexMap<String, JssValue>,
     // $key = value
     // keywords: IndexMap<String, JssValue>,
-}
-
-impl JssSchema {
-    pub fn get_name(&self) -> &str {
-        debug_assert!(self.name.is_some());
-        match &self.name {
-            Some(s) => s.as_str(),
-            None => "",
-        }
-    }
-    pub fn set_name<S>(&mut self, name: S)
-    where
-        S: Into<String>,
-    {
-        self.name = Some(name.into())
-    }
-
-    pub fn get_type(&self) -> &JssType {
-        &self.typing
-    }
-    pub fn set_type<S>(&mut self, typing: S)
-    where
-        S: Into<JssType>,
-    {
-        self.typing = typing.into()
-    }
-
-    pub fn has_description(&self) -> bool {
-        !self.description.is_empty()
-    }
-
-    pub fn get_description(&self) -> &str {
-        &self.description
-    }
-    pub fn set_description<S>(&mut self, description: S)
-    where
-        S: Into<String>,
-    {
-        self.description = description.into()
-    }
-
-    pub fn properties(&self) -> Iter<'_, String, JssSchema> {
-        self.property.iter()
-    }
-    pub fn insert_property<K, V>(&mut self, key: K, value: V) -> Option<JssSchema>
-    where
-        K: Into<String>,
-        V: Into<JssSchema>,
-    {
-        self.property.insert(key.into(), value.into())
-    }
-
-    pub fn attributes(&self) -> Iter<'_, String, JssValue> {
-        self.attribute.iter()
-    }
-    pub fn insert_attribute<K, V>(&mut self, key: K, value: V) -> Option<JssValue>
-    where
-        K: Into<String>,
-        V: Into<JssValue>,
-    {
-        self.attribute.insert(key.into(), value.into())
-    }
 }
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]

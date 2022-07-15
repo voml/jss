@@ -53,7 +53,7 @@ impl JssSchema {
 }
 
 impl JssSchema {
-    pub fn parse_value(name: String, value: JsonValue, errors: Errors) -> Result<Self> {
+    fn parse_value(name: String, value: JsonValue, errors: Errors) -> Result<Self> {
         let mut value = value;
         let mut jss = Self::default();
         jss.set_name(name);
@@ -63,6 +63,7 @@ impl JssSchema {
     }
     fn parse_steps(&mut self, is_top: bool, value: &mut JsonValue, errors: Errors) {
         self.parse_type(value, errors);
+        self.parse_name(value, errors);
         self.parse_description(value, errors);
         self.extend_properties("properties", is_top, value, errors);
         self.extend_definition("$defs", value, errors);
@@ -102,7 +103,7 @@ impl JssSchema {
                 match JssSchema::parse_value(key.to_owned(), value, errors) {
                     Ok(mut o) => {
                         o.kind = JssKind::Definition;
-                        self.definition.insert(key, o);
+                        self.insert_definition(key, o);
                     }
                     Err(e) => errors.push(e),
                 }

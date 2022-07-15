@@ -1,4 +1,4 @@
-use jss_core::{parse_json, JssSchema, Result};
+use jss_core::{JssSchema, Result};
 use std::str::FromStr;
 
 fn check_jss(jss: &str, debug: &str, json: &str) -> Result<()> {
@@ -33,9 +33,25 @@ fn test_properties() {
 }
 
 #[test]
-fn test() {
+fn test_property_deeper() {
+    let text = include_str!("simple/properties_deeper.jss");
+    let target = include_str!("simple/properties_deeper.txt");
     let json = include_str!("simple/properties_deeper.json");
-    parse_json(json).unwrap();
-    let jss = JssSchema::parse_json_schema(parse_json(json).unwrap()).unwrap();
+    check_jss(text, target, json).unwrap();
+}
+
+#[test]
+fn test_references() {
+    let text = include_str!("simple/references.jss");
+    let target = include_str!("simple/references.txt");
+    let json = include_str!("simple/references.json");
+    check_jss(text, target, json).unwrap();
+}
+
+#[test]
+fn test() {
+    let json = include_str!("simple/references.json");
+    jss_core::parse_json(json).unwrap();
+    let jss = JssSchema::parse_json_schema(jss_core::parse_json(json).unwrap()).unwrap();
     println!("{}", jss)
 }

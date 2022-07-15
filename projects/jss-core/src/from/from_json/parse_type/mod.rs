@@ -66,6 +66,12 @@ impl JssSchema {
 }
 
 impl JssSchema {
+    pub(crate) fn parse_name(&mut self, value: &mut JsonValue, _: Errors) {
+        let doc = value.extract_key_as_string("title");
+        if let Some(s) = doc {
+            self.set_name(s);
+        }
+    }
     pub(crate) fn parse_description(&mut self, value: &mut JsonValue, _: Errors) {
         let doc = value.extract_key_as_string("description").or_else(|| value.extract_key_as_string("$comment"));
         if let Some(s) = doc {

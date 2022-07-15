@@ -1,32 +1,40 @@
 {
+    "title": "Product",
+    "type": "object",
+    "description": "A product from Acme's catalog",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://example.com/product.schema.json",
-    "title": "Product",
-    "description": "A product from Acme's catalog",
-    "type": "object",
+    "required": [
+        "productId",
+        "productName",
+        "price"
+    ],
     "properties": {
         "productId": {
+            "type": "integer",
             "description": "The unique identifier for a product",
-            "type": "integer"
+            "properties": {}
         },
         "productName": {
+            "type": "string",
             "description": "Name of the product",
-            "type": "string"
+            "properties": {}
         },
         "price": {
-            "description": "The price of the product",
             "type": "number",
-            "exclusiveMinimum": 0
+            "description": "The price of the product",
+            "exclusiveMinimum": 0.0,
+            "properties": {}
         },
         "tags": {
-            "description": "Tags for the product",
             "type": "array",
+            "description": "Tags for the product",
+            "minItems": 1.0,
+            "uniqueItems": true,
             "items": {
                 "type": "string"
             },
-            "minItems": 1,
-            "uniqueItems": true
+            "properties": {}
         }
-    },
-    "required": ["productId", "productName", "price"]
+    }
 }
