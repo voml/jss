@@ -9,10 +9,15 @@ pub enum Rule {
     schema_statement,
     define_statement,
     _define,
-    property_statement,
+    property_block,
+    property_valid,
+    normal_filed,
+    dot_filed,
     _property,
+    pair,
     type_hint,
     COLON,
+    SET,
     data,
     Special,
     Byte,
@@ -31,10 +36,8 @@ pub enum Rule {
     NS2,
     S1,
     S2,
-    namespace,
-    Key,
     SYMBOL,
-    ExtraID,
+    URL,
     Dot,
     COMMENT,
     WHITESPACE,
@@ -59,12 +62,12 @@ impl ::pest::Parser<Rule> for JssParser {
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
                 pub fn program(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
-                    state.sequence(|state| self::SOI(state).and_then(|state| super::hidden::skip(state)).and_then(|state| state.sequence(|state| state.optional(|state| self::statement(state).and_then(|state| state.repeat(|state| state.sequence(|state| super::hidden::skip(state).and_then(|state| self::statement(state)))))))).and_then(|state| super::hidden::skip(state)).and_then(|state| self::EOI(state)))
+                    state.sequence(|state| self::SOI(state).and_then(|state| super::hidden::skip(state)).and_then(|state| state.sequence(|state| state.optional(|state| state.restore_on_err(|state| self::statement(state)).and_then(|state| state.repeat(|state| state.sequence(|state| super::hidden::skip(state).and_then(|state| state.restore_on_err(|state| self::statement(state))))))))).and_then(|state| super::hidden::skip(state)).and_then(|state| self::EOI(state)))
                 }
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
                 pub fn statement(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
-                    self::SEPARATOR(state).or_else(|state| state.sequence(|state| self::EmptyLine(state).and_then(|state| super::hidden::skip(state)).and_then(|state| state.sequence(|state| state.optional(|state| self::EmptyLine(state).and_then(|state| state.repeat(|state| state.sequence(|state| super::hidden::skip(state).and_then(|state| self::EmptyLine(state))))))))))
+                    self::SEPARATOR(state).or_else(|state| state.sequence(|state| self::EmptyLine(state).and_then(|state| super::hidden::skip(state)).and_then(|state| state.sequence(|state| state.optional(|state| self::EmptyLine(state).and_then(|state| state.repeat(|state| state.sequence(|state| super::hidden::skip(state).and_then(|state| self::EmptyLine(state)))))))))).or_else(|state| state.restore_on_err(|state| self::schema_statement(state)))
                 }
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
@@ -74,7 +77,7 @@ impl ::pest::Parser<Rule> for JssParser {
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
                 pub fn schema_statement(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
-                    state.rule(Rule::schema_statement, |state| state.sequence(|state| state.match_string("schema").and_then(|state| super::hidden::skip(state)).and_then(|state| self::SYMBOL(state)).and_then(|state| super::hidden::skip(state)).and_then(|state| state.optional(|state| self::type_hint(state)))))
+                    state.rule(Rule::schema_statement, |state| state.sequence(|state| state.match_string("schema").and_then(|state| super::hidden::skip(state)).and_then(|state| self::SYMBOL(state)).and_then(|state| super::hidden::skip(state)).and_then(|state| state.optional(|state| self::type_hint(state))).and_then(|state| super::hidden::skip(state)).and_then(|state| self::property_block(state))))
                 }
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
@@ -88,13 +91,33 @@ impl ::pest::Parser<Rule> for JssParser {
                 }
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
-                pub fn property_statement(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
-                    state.rule(Rule::property_statement, |state| state.sequence(|state| self::_property(state).and_then(|state| super::hidden::skip(state)).and_then(|state| self::SYMBOL(state)).and_then(|state| super::hidden::skip(state)).and_then(|state| state.optional(|state| self::type_hint(state)))))
+                pub fn property_block(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
+                    state.rule(Rule::property_block, |state| state.sequence(|state| state.match_string("{").and_then(|state| super::hidden::skip(state)).and_then(|state| state.sequence(|state| state.optional(|state| state.restore_on_err(|state| self::property_valid(state)).or_else(|state| self::SEPARATOR(state)).and_then(|state| state.repeat(|state| state.sequence(|state| super::hidden::skip(state).and_then(|state| state.restore_on_err(|state| self::property_valid(state)).or_else(|state| self::SEPARATOR(state))))))))).and_then(|state| super::hidden::skip(state)).and_then(|state| state.match_string("}"))))
+                }
+                #[inline]
+                #[allow(non_snake_case, unused_variables)]
+                pub fn property_valid(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
+                    state.restore_on_err(|state| self::normal_filed(state)).or_else(|state| state.restore_on_err(|state| self::dot_filed(state)))
+                }
+                #[inline]
+                #[allow(non_snake_case, unused_variables)]
+                pub fn normal_filed(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
+                    state.rule(Rule::normal_filed, |state| state.sequence(|state| self::SYMBOL(state).and_then(|state| super::hidden::skip(state)).and_then(|state| self::SET(state)).and_then(|state| super::hidden::skip(state)).and_then(|state| self::data(state))))
+                }
+                #[inline]
+                #[allow(non_snake_case, unused_variables)]
+                pub fn dot_filed(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
+                    state.rule(Rule::dot_filed, |state| state.sequence(|state| self::_property(state).and_then(|state| super::hidden::skip(state)).and_then(|state| self::SYMBOL(state)).and_then(|state| super::hidden::skip(state)).and_then(|state| state.optional(|state| self::type_hint(state))).and_then(|state| super::hidden::skip(state)).and_then(|state| self::property_block(state))))
                 }
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
                 pub fn _property(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
-                    state.match_string("property")
+                    state.match_string("property").or_else(|state| self::Dot(state))
+                }
+                #[inline]
+                #[allow(non_snake_case, unused_variables)]
+                pub fn pair(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
+                    state.rule(Rule::pair, |state| state.sequence(|state| self::SYMBOL(state).and_then(|state| super::hidden::skip(state)).and_then(|state| self::SET(state))))
                 }
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
@@ -108,8 +131,13 @@ impl ::pest::Parser<Rule> for JssParser {
                 }
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
+                pub fn SET(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
+                    state.rule(Rule::SET, |state| state.atomic(::pest::Atomicity::Atomic, |state| state.match_string(":").or_else(|state| state.match_string("="))))
+                }
+                #[inline]
+                #[allow(non_snake_case, unused_variables)]
                 pub fn data(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
-                    state.atomic(::pest::Atomicity::NonAtomic, |state| state.rule(Rule::data, |state| self::Special(state).or_else(|state| state.restore_on_err(|state| self::Cite(state))).or_else(|state| self::Byte(state)).or_else(|state| self::Number(state)).or_else(|state| state.restore_on_err(|state| self::String(state)))))
+                    state.atomic(::pest::Atomicity::NonAtomic, |state| state.rule(Rule::data, |state| self::URL(state).or_else(|state| self::Special(state)).or_else(|state| self::Cite(state)).or_else(|state| self::Byte(state)).or_else(|state| self::Number(state)).or_else(|state| state.restore_on_err(|state| self::String(state)))))
                 }
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
@@ -124,7 +152,7 @@ impl ::pest::Parser<Rule> for JssParser {
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
                 pub fn Cite(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
-                    state.atomic(::pest::Atomicity::CompoundAtomic, |state| state.rule(Rule::Cite, |state| state.sequence(|state| state.match_string("$").and_then(|state| self::namespace(state)))))
+                    state.atomic(::pest::Atomicity::CompoundAtomic, |state| state.rule(Rule::Cite, |state| state.sequence(|state| state.match_string("$").and_then(|state| state.match_string("namespace")))))
                 }
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
@@ -198,23 +226,13 @@ impl ::pest::Parser<Rule> for JssParser {
                 }
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
-                pub fn namespace(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
-                    state.rule(Rule::namespace, |state| state.sequence(|state| self::Key(state).and_then(|state| super::hidden::skip(state)).and_then(|state| state.sequence(|state| state.optional(|state| state.restore_on_err(|state| state.sequence(|state| self::Dot(state).and_then(|state| super::hidden::skip(state)).and_then(|state| self::Key(state)))).and_then(|state| state.repeat(|state| state.sequence(|state| super::hidden::skip(state).and_then(|state| state.restore_on_err(|state| state.sequence(|state| self::Dot(state).and_then(|state| super::hidden::skip(state)).and_then(|state| self::Key(state)))))))))))))
-                }
-                #[inline]
-                #[allow(non_snake_case, unused_variables)]
-                pub fn Key(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
-                    state.restore_on_err(|state| self::StringNormal(state)).or_else(|state| self::SYMBOL(state)).or_else(|state| self::SignedNumber(state))
-                }
-                #[inline]
-                #[allow(non_snake_case, unused_variables)]
                 pub fn SYMBOL(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
-                    state.rule(Rule::SYMBOL, |state| state.atomic(::pest::Atomicity::Atomic, |state| state.sequence(|state| self::XID_START(state).or_else(|state| self::ExtraID(state)).and_then(|state| state.repeat(|state| self::XID_CONTINUE(state).or_else(|state| self::ExtraID(state)))))))
+                    state.rule(Rule::SYMBOL, |state| state.atomic(::pest::Atomicity::Atomic, |state| state.sequence(|state| self::XID_START(state).or_else(|state| state.match_string("_")).or_else(|state| state.match_string("$")).and_then(|state| state.repeat(|state| self::XID_CONTINUE(state).or_else(|state| state.match_string("_")).or_else(|state| state.match_string("-")))))))
                 }
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
-                pub fn ExtraID(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
-                    state.rule(Rule::ExtraID, |state| state.atomic(::pest::Atomicity::Atomic, |state| state.match_string("_")))
+                pub fn URL(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
+                    state.rule(Rule::URL, |state| state.atomic(::pest::Atomicity::Atomic, |state| state.sequence(|state| state.sequence(|state| self::ASCII_ALPHA(state).and_then(|state| state.repeat(|state| self::ASCII_ALPHA(state)))).and_then(|state| state.match_string("://")).and_then(|state| state.repeat(|state| self::XID_CONTINUE(state).or_else(|state| state.match_string("_")).or_else(|state| state.match_string("-")).or_else(|state| state.match_string("/")).or_else(|state| state.match_string(".")))))))
                 }
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
@@ -244,7 +262,7 @@ impl ::pest::Parser<Rule> for JssParser {
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
                 pub fn SEPARATOR(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
-                    state.rule(Rule::SEPARATOR, |state| state.atomic(::pest::Atomicity::Atomic, |state| state.match_string(",").or_else(|state| state.match_string(";"))))
+                    state.match_string(",").or_else(|state| state.match_string(";"))
                 }
                 #[inline]
                 #[allow(dead_code, non_snake_case, unused_variables)]
@@ -321,10 +339,15 @@ impl ::pest::Parser<Rule> for JssParser {
             Rule::schema_statement => rules::schema_statement(state),
             Rule::define_statement => rules::define_statement(state),
             Rule::_define => rules::_define(state),
-            Rule::property_statement => rules::property_statement(state),
+            Rule::property_block => rules::property_block(state),
+            Rule::property_valid => rules::property_valid(state),
+            Rule::normal_filed => rules::normal_filed(state),
+            Rule::dot_filed => rules::dot_filed(state),
             Rule::_property => rules::_property(state),
+            Rule::pair => rules::pair(state),
             Rule::type_hint => rules::type_hint(state),
             Rule::COLON => rules::COLON(state),
+            Rule::SET => rules::SET(state),
             Rule::data => rules::data(state),
             Rule::Special => rules::Special(state),
             Rule::Byte => rules::Byte(state),
@@ -343,10 +366,8 @@ impl ::pest::Parser<Rule> for JssParser {
             Rule::NS2 => rules::NS2(state),
             Rule::S1 => rules::S1(state),
             Rule::S2 => rules::S2(state),
-            Rule::namespace => rules::namespace(state),
-            Rule::Key => rules::Key(state),
             Rule::SYMBOL => rules::SYMBOL(state),
-            Rule::ExtraID => rules::ExtraID(state),
+            Rule::URL => rules::URL(state),
             Rule::Dot => rules::Dot(state),
             Rule::COMMENT => rules::COMMENT(state),
             Rule::WHITESPACE => rules::WHITESPACE(state),

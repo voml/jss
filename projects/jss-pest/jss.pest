@@ -2,23 +2,31 @@ program = _{SOI ~ statement* ~ EOI}
 statement = _{
     SEPARATOR
   | EmptyLine{1,}
+  | schema_statement
 }
 EmptyLine  = @{WHITESPACE* ~ NEWLINE}
 /*====================================================================================================================*/
 //!#C678DD: Import
 // include_statement = {"@include" ~ "(" ~ StringNormal ~ ("," ~ SYMBOL) ~ ")"}
-schema_statement =  {"schema" ~ SYMBOL ~ type_hint?}
+schema_statement =  {"schema" ~ SYMBOL ~ type_hint? ~ property_block}
 define_statement =  {_define ~ SYMBOL? ~ StringNormal}
 _define = _{"def"|"define"}
 /*====================================================================================================================*/
-property_statement = {_property ~ SYMBOL ~ type_hint?}
-_property = _{"property"}
+property_block = {"{" ~ (property_valid|SEPARATOR)* ~ "}"}
+property_valid = _{normal_filed|dot_filed}
+/*====================================================================================================================*/
+normal_filed = {SYMBOL ~ SET ~ data}
+dot_filed = {_property ~ SYMBOL ~ type_hint? ~ property_block}
+_property = _{"property"|Dot}
+/*====================================================================================================================*/
+pair = {SYMBOL ~ SET}
 /*====================================================================================================================*/
 type_hint = {COLON ~ SYMBOL}
 COLON = @{":"}
+SET = @{":"|"="}
 /*====================================================================================================================*/
 data = !{
-    Special|Cite|Byte|Number
+    URL | Special|Cite|Byte|Number
   | String
 }
 /*====================================================================================================================*/
@@ -27,7 +35,7 @@ Special = @{"true"|"false"|"null"}
 Byte    = @{"0" ~ ASCII_ALPHA ~ (ASCII_ALPHANUMERIC|"_"|"-")}
 /*====================================================================================================================*/
 ///#56B6C2
-Cite = ${"$" ~ namespace}
+Cite = ${"$" ~ "namespace"}
 /*====================================================================================================================*/
 //!#D19A66: SignedNumber
 Number       = ${(Exponent|SignedNumber) ~ SYMBOL?}
@@ -63,11 +71,10 @@ S1 = @{"'"}
 S2 = @{"\""}
 /*====================================================================================================================*/
 ///#61AFEF
-namespace =  {Key ~ (Dot ~ Key)*}
-Key       = _{StringNormal|SYMBOL|SignedNumber}
-SYMBOL    = @{(XID_START|ExtraID) ~ (XID_CONTINUE|ExtraID)*}
-ExtraID   = @{"_"}
-Dot       = @{"."}
+SYMBOL = @{(XID_START|"_"|"$") ~ (XID_CONTINUE|"_"|"-")*}
+///#3C963C
+URL    = @{ASCII_ALPHA+ ~ "://" ~ (XID_CONTINUE|"_"|"-"|"/"|".")*}
+Dot    = @{"."}
 /*====================================================================================================================*/
 // NEWLINE = @{"\r" ~ "\n"|"\r"|"\n"}
 
@@ -77,4 +84,4 @@ WHITESPACE       = _{NEWLINE|SPACE_SEPARATOR|"\t"}
 LineComment      = ${"//" ~ (!NEWLINE ~ ANY)*}
 MultiLineComment = ${"/*" ~ (MultiLineComment | !"*/" ~ ANY)* ~ "*/"}
 
-SEPARATOR  = @{","|";"}
+SEPARATOR  = _{","|";"}
