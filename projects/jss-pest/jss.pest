@@ -1,54 +1,25 @@
-program = _{
-    SOI ~ heads* ~ statement* ~ EOI
-  | SOI ~ data ~ EOI
-}
-heads = _ {
-    import_statement|extend_statement
-}
+program = _{SOI ~ statement* ~ EOI}
 statement = _{
     SEPARATOR
   | EmptyLine{1,}
-//| include_statement
-  | dict_pair
-  | dict_scope
-  | list_scope
-//| dict_literal // For json compatibility
 }
 EmptyLine  = @{WHITESPACE* ~ NEWLINE}
 /*====================================================================================================================*/
 //!#C678DD: Import
 // include_statement = {"@include" ~ "(" ~ StringNormal ~ ("," ~ SYMBOL) ~ ")"}
-import_statement =  {"#import" ~ SYMBOL ~ StringNormal ~ "as" ~ namespace}
-extend_statement =  {"#extend" ~ SYMBOL? ~ StringNormal}
+schema_statement =  {"schema" ~ SYMBOL ~ type_hint?}
+define_statement =  {_define ~ SYMBOL? ~ StringNormal}
+_define = _{"def"|"define"}
 /*====================================================================================================================*/
-dict_scope   = _{dict_head ~ dict_pair*}
-dict_head    = !{"{" ~ Dot* ~ namespace ~ "}"}
-dict_pair    = !{namespace ~ Set ~ (data|RestLineText)}
-dict_literal =  {
-    SYMBOL? ~  "{" ~ "}"
-  | SYMBOL? ~ "{" ~ (SEPARATOR? ~ dict_pair)+ ~ SEPARATOR? ~ "}"
-}
-Set          = @{"="|":"}
+property_statement = {_property ~ SYMBOL ~ type_hint?}
+_property = _{"property"}
 /*====================================================================================================================*/
-list_scope   = _{list_head ~ list_pair*}
-list_head    = !{"[" ~ Dot* ~ namespace ~ "]"}
-list_pair    =  {
-    Insert ~ dict_pair+
-  | Append ~ WHITE_SPACE* ~ (!data ~ ListString|data)
-}
-list_literal =  {
-    SYMBOL? ~ "[" ~ "]"
-  | SYMBOL? ~ "[" ~ (SEPARATOR? ~ (data|RestLineText))+ ~ SEPARATOR? ~ "]"
-}
-RestLineText = @{(!(NEWLINE|"]"|"}") ~ ANY)+}
-ListString   = @{(!(">"|"^"|"["|"{") ~ ANY)+}
-Insert       = @{"^"}
-Append       = @{">"}
+type_hint = {COLON ~ SYMBOL}
+COLON = @{":"}
 /*====================================================================================================================*/
 data = !{
     Special|Cite|Byte|Number
   | String
-  | dict_literal|list_literal
 }
 /*====================================================================================================================*/
 ///#D19A66

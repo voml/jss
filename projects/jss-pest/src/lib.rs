@@ -1,6 +1,6 @@
-mod arc;
+mod jss;
 
-pub use arc::{ArcParser, Rule};
+pub use self::jss::{JssParser, Rule};
 pub use pest::{
     self,
     error::Error,
