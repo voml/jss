@@ -16,9 +16,9 @@ impl From<JsonValue> for JssValue {
 }
 
 impl JssSchema {
-    pub fn parse_json_schema_as_jss(top: JsonValue) -> Result<Self, Vec<JssError>> {
+    pub fn parse_json_schema(top: JsonValue) -> Result<Self, Vec<JssError>> {
         let mut errors = vec![];
-        match Self::parse_json_schema(top, &mut errors) {
+        match Self::try_parse_json_schema(top, &mut errors) {
             Ok(o) => Ok(o),
             Err(e) => {
                 errors.push(e);
@@ -27,7 +27,7 @@ impl JssSchema {
         }
     }
 
-    pub fn parse_json_schema(top: JsonValue, errors: Errors) -> Result<Self> {
+    fn try_parse_json_schema(top: JsonValue, errors: Errors) -> Result<Self> {
         let mut top = top;
         // https://json-schema.org/understanding-json-schema/basics.html#id1
         // Accepts anything, as long as it’s valid JSON
@@ -63,6 +63,7 @@ impl JssSchema {
     }
     fn parse_steps(&mut self, is_top: bool, value: &mut JsonValue, errors: Errors) {
         self.parse_type(value, errors);
+        self.parse_description(value, errors);
         self.extend_properties("properties", is_top, value, errors);
         self.extend_definition("$defs", value, errors);
         self.extend_definition("definitions", value, errors);

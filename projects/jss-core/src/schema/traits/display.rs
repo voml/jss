@@ -10,8 +10,8 @@ impl Display for JssSchema {
         match self.kind {
             JssKind::Scheme => f.write_str("schema "),
             JssKind::Property => f.write_str("."),
-            JssKind::PropertyTop => f.write_str("prop "),
-            JssKind::Definition => f.write_str("def "),
+            JssKind::PropertyTop => f.write_str("property "),
+            JssKind::Definition => f.write_str("define "),
         }?;
         self.head(f)?;
         // for (key, value) in &self.keywords {
@@ -52,7 +52,7 @@ impl JssSchema {
             Some(s) => f.write_str(s)?,
         }
         if self.typing != JssType::Undefined {
-            f.write_str(&self.typing.to_string())?
+            write!(f, ": {}", self.typing)?
         }
         f.write_str(" {\n")?;
         Ok(())
@@ -113,7 +113,7 @@ impl Display for JssType {
 }
 
 impl Display for JssComplexType {
-    fn fmt(&self, _: &mut Formatter<'_>) -> std::fmt::Result {
-        todo!()
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        f.write_str(&self.pattern.to_string())
     }
 }

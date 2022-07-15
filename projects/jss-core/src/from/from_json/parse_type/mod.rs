@@ -1,38 +1,23 @@
-use crate::{schema::*, Errors, JssError, Result};
 use json_value::{JsonMaybeObject, JsonValue, JsonValueWrap};
+
+use crate::{schema::*, Errors, JssError, Result};
 
 impl JssType {
     pub fn parse_value(typing: JsonValue, value: &mut JsonValue, errors: Errors) -> Result<Self> {
         match typing {
-            JsonValue::Null => {
-                unimplemented!()
-            }
-            JsonValue::Bool(_) => {
-                unimplemented!()
-            }
-            JsonValue::Number(_) => {
-                unimplemented!()
-            }
+            JsonValue::Null => unimplemented!(),
+            JsonValue::Bool(_) => unimplemented!(),
+            JsonValue::Number(_) => unimplemented!(),
             JsonValue::String(s) => Self::parse_string(&s, value, errors),
-            JsonValue::Array(_) => {
-                unimplemented!()
-            }
-            JsonValue::Object(_) => {
-                unimplemented!()
-            }
+            JsonValue::Array(_) => unimplemented!(),
+            JsonValue::Object(_) => unimplemented!(),
         }
     }
-    fn parse_string(typing: &str, value: &mut JsonValue, errors: Errors) -> Result<Self> {
-        let out = match typing {
-            "string" => {
-                let mut t = JssComplexType::default();
-                t.parse(value, errors);
-                Self::Complex(Box::new(t))
-            }
-            "object" => Self::Object,
-            _ => unimplemented!("{}", typing),
-        };
-        Ok(out)
+    fn parse_string(typing: &str, _value: &mut JsonValue, _errors: Errors) -> Result<Self> {
+        // let mut t = JssComplexType::default();
+        // t.parse(value, errors);
+        // Self::Complex(Box::new(t));
+        Ok(JssType::from(typing))
     }
     pub fn parse_ref(r: String) -> Result<Self> {
         Ok(Self::Reference(r))
@@ -51,7 +36,7 @@ impl JssComplexType {
 }
 
 impl JssSchema {
-    pub fn parse_type(&mut self, value: &mut JsonValue, errors: Errors) {
+    pub(crate) fn parse_type(&mut self, value: &mut JsonValue, errors: Errors) {
         if let Some(s) = value.extract_key("$ref") {
             self.for_ref(s, errors);
             return;
@@ -76,6 +61,15 @@ impl JssSchema {
                 Ok(o) => self.set_type(o),
                 Err(e) => errors.push(e),
             },
+        }
+    }
+}
+
+impl JssSchema {
+    pub(crate) fn parse_description(&mut self, value: &mut JsonValue, _: Errors) {
+        let doc = value.extract_key_as_string("description").or_else(|| value.extract_key_as_string("$comment"));
+        if let Some(s) = doc {
+            self.set_description(s);
         }
     }
 }

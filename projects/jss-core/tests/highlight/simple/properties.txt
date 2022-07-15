@@ -1,0 +1,18 @@
+JssScheme {
+    type: Object,
+    definitions: {},
+    attributes: {
+        "$schema": https://json-schema.org/draft/2020-12/schema,
+        "$id": https://example.com/product.schema.json,
+        "required": [
+            "productId",
+        ],
+    },
+    properties: {
+        "productId": JssProperty {
+            type: Integer,
+            attributes: {},
+            properties: {},
+        },
+    },
+}
