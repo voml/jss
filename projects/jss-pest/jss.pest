@@ -30,8 +30,8 @@ COLON = _{":"}
 SET   = _{":"|"="}
 /*====================================================================================================================*/
 data = !{
-    URL |Special|Byte|Number
-  | STRING_INLINE | array | object
+    URL |Special | _number
+  | _string | array | object
 }
 /*====================================================================================================================*/
 object = {"{" ~ (object_item|SEPARATOR)* ~ "}"}
@@ -44,18 +44,21 @@ Special = @{"true"|"false"|"null"}
 ///#56B6C2
 Cite = ${"$" ~ "namespace"}
 /*====================================================================================================================*/
-//!#D19A66: Number|Byte
-Number       = ${Exponent|SignedNumber}
+//!#D19A66: Float|Integer|Byte
+_number       = _{Float|Integer|Byte}
+Float        = @{Exponent|SignedNumber}
+Integer      = @{Sign? ~ UNSIGNED}
 Byte         = @{"0" ~ ASCII_ALPHA ~ (ASCII_ALPHANUMERIC|"_"|"-")}
-SignedNumber = ${Sign? ~ (Decimal|DecimalBad|Integer)}
-Decimal      = ${Integer ~ DOT ~ ("_"? ~ ASCII_DIGIT)*}
-DecimalBad   = ${Integer ~ DOT|DOT ~ ("_"? ~ ASCII_DIGIT)*}
-//Integer    = @{"0"|ASCII_NONZERO_DIGIT ~ ("_"? ~ ASCII_DIGIT)*}
-Integer      = @{ASCII_DIGIT ~ ("_"? ~ ASCII_DIGIT)*}
+
+SignedNumber = ${Sign? ~ (Decimal|DecimalBad|UNSIGNED)}
+Decimal      = ${UNSIGNED ~ DOT ~ ("_"? ~ ASCII_DIGIT)*}
+DecimalBad   = ${UNSIGNED ~ DOT|DOT ~ ("_"? ~ ASCII_DIGIT)*}
+UNSIGNED     = @{ASCII_DIGIT ~ ("_"? ~ ASCII_DIGIT)*}
 Exponent     = ${SignedNumber ~ ("e"|"E"|"**") ~ Sign? ~ ASCII_DIGIT+}
 Sign         = @{"+"|"-"}
 /*====================================================================================================================*/
 /// #98C379
+_string = _{STRING_INLINE}
 STRING_INLINE = ${
     S1 ~ (ESCAPED|NS1)* ~ S1
   | S2 ~ (ESCAPED|NS2)* ~ S2

@@ -73,6 +73,9 @@ impl From<&str> for JssType {
     fn from(s: &str) -> Self {
         match s {
             "object" => JssType::Object,
+            "integer" => JssType::Integer,
+            "number" => JssType::Number,
+            "string" => JssType::String,
             _ => unimplemented!("{:?}", s),
         }
     }
@@ -91,10 +94,12 @@ pub enum JssType {
     Undefined,
     Anything,
     Nothing,
-    String(Box<JssStringType>),
+    String,
+    Integer,
     Number,
     Object,
     Reference(String),
+    Complex(Box<JssStringType>),
 }
 
 #[derive(PartialEq)]

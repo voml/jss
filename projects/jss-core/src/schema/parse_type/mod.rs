@@ -27,7 +27,7 @@ impl JssType {
             "string" => {
                 let mut t = JssStringType::default();
                 t.parse(value, errors);
-                Self::String(Box::new(t))
+                Self::Complex(Box::new(t))
             }
             "object" => Self::Object,
             _ => unimplemented!("{}", typing),
