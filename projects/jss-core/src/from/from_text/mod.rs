@@ -1,5 +1,6 @@
+use std::{mem::take, str::FromStr};
+
 use indexmap::IndexMap;
-use std::str::FromStr;
 
 use json_value::Number;
 use jss_pest::{JssParser, Pair, Parser, Rule};
@@ -25,11 +26,12 @@ macro_rules! debug_cases {
 
 struct ParseContext {
     errors: Vec<JssError>,
+    documents: String,
 }
 
 impl Default for ParseContext {
     fn default() -> Self {
-        Self { errors: vec![] }
+        Self { errors: vec![], documents: "".to_string() }
     }
 }
 
@@ -40,12 +42,17 @@ impl ParseContext {
         for pair in parsed {
             match pair.as_rule() {
                 Rule::EOI => continue,
-                Rule::schema_statement => self.parse_schema_statement(pair, &mut node)?,
+                Rule::schema_statement => {
+                    node.set_description(take(&mut self.documents));
+                    self.parse_schema_statement(pair, &mut node)?
+                }
                 Rule::property_statement => {
-                    let property = self.parse_property_statement(pair)?;
+                    let mut property = self.parse_property_statement(pair)?;
+                    property.set_description(take(&mut self.documents));
                     let name = property.get_name().to_string();
                     node.insert_property(name, property);
                 }
+                Rule::DOCUMENTATION => self.push_comment(pair),
                 _ => debug_cases!(pair),
             }
         }
@@ -80,7 +87,7 @@ impl ParseContext {
                     let mut inner = pair.into_inner();
                     let key = self.parse_key(inner.next().unwrap())?;
                     let value = self.parse_data(inner.next().unwrap())?;
-                    node.attribute.insert(key, value);
+                    node.insert_attribute(key, value);
                 }
                 Rule::property_statement => {
                     let property = self.parse_property_statement(pair)?;
@@ -106,6 +113,13 @@ impl ParseContext {
             }
         }
         Ok(JssValue::Object(out))
+    }
+    pub fn push_comment(&mut self, pair: Pair<Rule>) {
+        if !self.documents.is_empty() {
+            self.documents.push('\n');
+        }
+        let comment = pair.as_str().trim_start_matches("///").trim();
+        self.documents.push_str(comment);
     }
 }
 

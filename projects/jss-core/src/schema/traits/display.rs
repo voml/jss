@@ -1,10 +1,12 @@
-use super::*;
 use std::fmt::Write;
+
 use text_utils::indent;
+
+use super::*;
 
 impl Display for JssSchema {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        self.description(f)?;
+        self.write_description(f)?;
         match self.kind {
             JssKind::Scheme => f.write_str("schema "),
             JssKind::Property => f.write_str("."),
@@ -12,9 +14,9 @@ impl Display for JssSchema {
             JssKind::Definition => f.write_str("def "),
         }?;
         self.head(f)?;
-        for (key, value) in &self.keywords {
-            writeln!(f, "{}", indent(format!("{}: {:#?}", key, value), 4))?;
-        }
+        // for (key, value) in &self.keywords {
+        //     writeln!(f, "{}", indent(format!("{}: {:#?}", key, value), 4))?;
+        // }
         for (key, value) in &self.attribute {
             writeln!(f, "{}", indent(format!("{}: {:#?}", key, value), 4))?;
         }
@@ -56,9 +58,9 @@ impl JssSchema {
         Ok(())
     }
     #[inline]
-    fn description(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        if let Some(s) = &self.description {
-            for line in s.lines() {
+    fn write_description(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        if self.has_description() {
+            for line in self.description.lines() {
                 writeln!(f, "/// {}", line)?
             }
         }
@@ -96,30 +98,22 @@ impl Display for JssValue {
 impl Display for JssType {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
-            Self::Undefined => {
-                write!(f, "undefined")
-            }
-            Self::Anything => {
-                write!(f, ": anything")
-            }
-            Self::Nothing => {
-                write!(f, ": nothing")
-            }
-            Self::Complex(_) => {
-                write!(f, ": string")
-            }
-            Self::Number => {
-                write!(f, ": number")
-            }
-            JssType::Integer => write!(f, ": integer"),
-            Self::Object => {
-                write!(f, ": object")
-            }
-            Self::Reference(v) => {
-                write!(f, ": {:?}", v)
-            }
-            JssType::String => write!(f, ": string"),
-            JssType::Array => write!(f, ": array"),
+            Self::Undefined => f.write_str("undefined"),
+            Self::Anything => f.write_str("anything"),
+            Self::Nothing => f.write_str("nothing"),
+            Self::Number => f.write_str("number"),
+            JssType::Integer => f.write_str("integer"),
+            Self::Object => f.write_str("object"),
+            Self::Reference(v) => f.write_str(&v),
+            JssType::String => f.write_str("string"),
+            JssType::Array => f.write_str("array"),
+            Self::Complex(v) => f.write_str(&v.to_string()),
         }
+    }
+}
+
+impl Display for JssComplexType {
+    fn fmt(&self, _: &mut Formatter<'_>) -> std::fmt::Result {
+        todo!()
     }
 }

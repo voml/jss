@@ -11,7 +11,6 @@ impl Debug for JssSchema {
         if let JssKind::Scheme = &self.kind {
             w.field("definitions", &self.definition);
         }
-        w.field("keywords", &self.keywords);
         w.field("attributes", &self.attribute);
         w.field("properties", &self.property);
         w.finish()

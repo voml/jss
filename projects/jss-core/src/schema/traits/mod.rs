@@ -21,12 +21,12 @@ impl Default for JssSchema {
         Self {
             kind: JssKind::Property,
             name: None,
-            description: None,
+            description: "".to_string(),
             typing: Default::default(),
             property: Default::default(),
             definition: Default::default(),
             attribute: Default::default(),
-            keywords: Default::default(),
+            // keywords: Default::default(),
         }
     }
 }
@@ -55,5 +55,8 @@ impl JssSchema {
     #[inline]
     pub fn is_noting(&self) -> bool {
         matches!(self.typing, JssType::Nothing)
+    }
+    pub fn is_top(&self) -> bool {
+        matches!(self.kind, JssKind::Scheme)
     }
 }
