@@ -34,7 +34,7 @@ pub enum Rule {
     Sign,
     string,
     STRING_INLINE,
-    NS,
+    ESCAPED,
     S1,
     S2,
     NS1,
@@ -104,7 +104,7 @@ impl ::pest::Parser<Rule> for JssParser {
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
                 pub fn DOT(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
-                    state.rule(Rule::DOT, |state| state.atomic(::pest::Atomicity::Atomic, |state| state.match_string(".")))
+                    state.match_string(".")
                 }
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
@@ -134,12 +134,12 @@ impl ::pest::Parser<Rule> for JssParser {
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
                 pub fn COLON(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
-                    state.rule(Rule::COLON, |state| state.atomic(::pest::Atomicity::Atomic, |state| state.match_string(":")))
+                    state.match_string(":")
                 }
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
                 pub fn SET(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
-                    state.rule(Rule::SET, |state| state.atomic(::pest::Atomicity::Atomic, |state| state.match_string(":").or_else(|state| state.match_string("="))))
+                    state.match_string(":").or_else(|state| state.match_string("="))
                 }
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
@@ -214,22 +214,22 @@ impl ::pest::Parser<Rule> for JssParser {
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
                 pub fn STRING_INLINE(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
-                    state.atomic(::pest::Atomicity::CompoundAtomic, |state| state.rule(Rule::STRING_INLINE, |state| state.sequence(|state| self::S1(state).and_then(|state| state.repeat(|state| self::NS(state).or_else(|state| self::NS1(state)))).and_then(|state| self::S1(state))).or_else(|state| state.sequence(|state| self::S2(state).and_then(|state| state.repeat(|state| self::NS(state).or_else(|state| self::NS2(state)))).and_then(|state| self::S2(state))))))
+                    state.atomic(::pest::Atomicity::CompoundAtomic, |state| state.rule(Rule::STRING_INLINE, |state| state.sequence(|state| self::S1(state).and_then(|state| state.repeat(|state| self::ESCAPED(state).or_else(|state| self::NS1(state)))).and_then(|state| self::S1(state))).or_else(|state| state.sequence(|state| self::S2(state).and_then(|state| state.repeat(|state| self::ESCAPED(state).or_else(|state| self::NS2(state)))).and_then(|state| self::S2(state))))))
                 }
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
-                pub fn NS(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
-                    state.rule(Rule::NS, |state| state.atomic(::pest::Atomicity::Atomic, |state| state.sequence(|state| state.match_string("\\u").and_then(|state| self::ASCII_HEX_DIGIT(state)).and_then(|state| self::ASCII_HEX_DIGIT(state)).and_then(|state| self::ASCII_HEX_DIGIT(state)).and_then(|state| self::ASCII_HEX_DIGIT(state))).or_else(|state| state.sequence(|state| state.match_string("\\u").and_then(|state| state.match_string("{")).and_then(|state| state.sequence(|state| self::ASCII_HEX_DIGIT(state).or_else(|state| self::SPACE_SEPARATOR(state)).and_then(|state| state.repeat(|state| self::ASCII_HEX_DIGIT(state).or_else(|state| self::SPACE_SEPARATOR(state)))))).and_then(|state| state.match_string("}")))).or_else(|state| state.sequence(|state| state.match_string("\\").and_then(|state| self::ANY(state))))))
+                pub fn ESCAPED(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
+                    state.rule(Rule::ESCAPED, |state| state.atomic(::pest::Atomicity::Atomic, |state| state.sequence(|state| state.match_string("\\u").and_then(|state| self::ASCII_HEX_DIGIT(state)).and_then(|state| self::ASCII_HEX_DIGIT(state)).and_then(|state| self::ASCII_HEX_DIGIT(state)).and_then(|state| self::ASCII_HEX_DIGIT(state))).or_else(|state| state.sequence(|state| state.match_string("\\u").and_then(|state| state.match_string("{")).and_then(|state| state.sequence(|state| self::ASCII_HEX_DIGIT(state).or_else(|state| self::SPACE_SEPARATOR(state)).and_then(|state| state.repeat(|state| self::ASCII_HEX_DIGIT(state).or_else(|state| self::SPACE_SEPARATOR(state)))))).and_then(|state| state.match_string("}")))).or_else(|state| state.sequence(|state| state.match_string("\\").and_then(|state| self::ANY(state))))))
                 }
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
                 pub fn S1(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
-                    state.rule(Rule::S1, |state| state.atomic(::pest::Atomicity::Atomic, |state| state.match_string("'")))
+                    state.match_string("'")
                 }
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
                 pub fn S2(state: Box<::pest::ParserState<Rule>>) -> ::pest::ParseResult<Box<::pest::ParserState<Rule>>> {
-                    state.rule(Rule::S2, |state| state.atomic(::pest::Atomicity::Atomic, |state| state.match_string("\"")))
+                    state.match_string("\"")
                 }
                 #[inline]
                 #[allow(non_snake_case, unused_variables)]
@@ -366,7 +366,7 @@ impl ::pest::Parser<Rule> for JssParser {
             Rule::Sign => rules::Sign(state),
             Rule::string => rules::string(state),
             Rule::STRING_INLINE => rules::STRING_INLINE(state),
-            Rule::NS => rules::NS(state),
+            Rule::ESCAPED => rules::ESCAPED(state),
             Rule::S1 => rules::S1(state),
             Rule::S2 => rules::S2(state),
             Rule::NS1 => rules::NS1(state),
